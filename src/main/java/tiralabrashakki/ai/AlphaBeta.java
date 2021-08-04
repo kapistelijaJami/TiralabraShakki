@@ -14,7 +14,12 @@ public class AlphaBeta {
 	 * @return The best move
 	 */
 	public Move findBestMove(Board board, int depth) {
-		MoveAndValue mv = abMax(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		MoveAndValue mv;
+		if (board.getTurnColor().isWhite()) {
+			mv = abMax(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		} else {
+			mv = abMin(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		}
 		return mv.getMove();
 	}
 	

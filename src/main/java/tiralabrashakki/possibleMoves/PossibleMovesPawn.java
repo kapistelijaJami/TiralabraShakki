@@ -40,7 +40,7 @@ public class PossibleMovesPawn extends PossibleMoves {
 					addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y + dir), colorTurn, possibleMoves);
 				}
 			} else { //en passant
-				c = board.get(x + i, y); //next to start
+				c = board.get(x + i, y); //next to start square
 				if (colorTurn.isEnemyPiece(c) && Character.toUpperCase(c) == 'P' && board.getPieceHasMoved(x + i, y + dir) == 2) { //landing on en passant square
 					addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y + dir), colorTurn, possibleMoves);
 				}
