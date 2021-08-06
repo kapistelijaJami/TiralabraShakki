@@ -8,13 +8,7 @@ public class ChessGame {
 	public static void main(String[] args) {
 		Board board = new Board();
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
-		System.out.print("{");
-		for (Move move : moves) {
-			System.out.print("{new Location(" + move.getStart().getX() + ", " + move.getStart().getY() + "), new Location(" + move.getDest().getX() + ", " + move.getDest().getY() + ")}, ");
-		}
-		
-		/*printBoard(board);
+		printBoard(board);
 		
 		AlphaBeta ab = new AlphaBeta();
 		int depth = 5;
@@ -24,7 +18,7 @@ public class ChessGame {
 			System.out.println(board.getTurnColor() + " played: " + move);
 			board.makeMove(move);
 			printBoard(board);
-		}*/
+		}
 		
 		/*printBoard(board);
 		//printMoves(board);

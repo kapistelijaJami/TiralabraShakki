@@ -62,32 +62,32 @@ public class PossibleMovesTest {
 	
 	@Test
 	public void checkAllPossibleMovesTest() {
-		Location[][] locations = new Location[][] { //list of all possible white moves at the start of the game
-			{new Location(0, 6), new Location(0, 5)},
-			{new Location(0, 6), new Location(0, 4)},
-			{new Location(1, 6), new Location(1, 5)},
-			{new Location(1, 6), new Location(1, 4)},
-			{new Location(2, 6), new Location(2, 5)},
-			{new Location(2, 6), new Location(2, 4)},
-			{new Location(3, 6), new Location(3, 5)},
-			{new Location(3, 6), new Location(3, 4)},
-			{new Location(4, 6), new Location(4, 5)},
-			{new Location(4, 6), new Location(4, 4)},
-			{new Location(5, 6), new Location(5, 5)},
-			{new Location(5, 6), new Location(5, 4)},
-			{new Location(6, 6), new Location(6, 5)},
-			{new Location(6, 6), new Location(6, 4)},
-			{new Location(7, 6), new Location(7, 5)},
-			{new Location(7, 6), new Location(7, 4)},
-			{new Location(1, 7), new Location(0, 5)},
-			{new Location(1, 7), new Location(2, 5)},
-			{new Location(6, 7), new Location(5, 5)},
-			{new Location(6, 7), new Location(7, 5)}};
+		int[][] locations = new int[][] {
+			{0, 6, 0, 5},
+			{0, 6, 0, 4},
+			{1, 6, 1, 5},
+			{1, 6, 1, 4},
+			{2, 6, 2, 5},
+			{2, 6, 2, 4},
+			{3, 6, 3, 5},
+			{3, 6, 3, 4},
+			{4, 6, 4, 5},
+			{4, 6, 4, 4},
+			{5, 6, 5, 5},
+			{5, 6, 5, 4},
+			{6, 6, 6, 5},
+			{6, 6, 6, 4},
+			{7, 6, 7, 5},
+			{7, 6, 7, 4},
+			{1, 7, 0, 5},
+			{1, 7, 2, 5},
+			{6, 7, 5, 5},
+			{6, 7, 7, 5}};
 		
 		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
 		
-		for (Location[] loc : locations) {
-			assertTrue(moves.contains(Move.createMove(board, loc[0].getX(), loc[0].getY(), loc[1].getX(), loc[1].getY())));
+		for (int[] loc : locations) {
+			assertTrue(moves.contains(Move.createMove(board, loc[0], loc[1], loc[2], loc[3])));
 		}
 	}
 }
