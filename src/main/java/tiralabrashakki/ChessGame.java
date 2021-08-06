@@ -11,16 +11,14 @@ public class ChessGame {
 		printBoard(board);
 		
 		AlphaBeta ab = new AlphaBeta();
+		int depth = 5;
 		
-		System.out.println("START");
-		Move move = ab.findBestMove(board, 6);
-		board.makeMove(move);
-		printBoard(board);
-		
-		move = ab.findBestMove(board, 6);
-		board.makeMove(move);
-		printBoard(board);
-		
+		while (!PossibleMoves.getPossibleMoves(board).isEmpty()) {
+			Move move = ab.findBestMove(board, depth);
+			System.out.println(board.getTurnColor() + " played: " + move);
+			board.makeMove(move);
+			printBoard(board);
+		}
 		
 		/*printBoard(board);
 		//printMoves(board);
