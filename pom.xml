@@ -1,40 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>tiralabrashakki</groupId>
-    <artifactId>TiralabraShakki</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>tiralabrashakki</groupId>
+	<artifactId>TiralabraShakki</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<properties>
+		<java.version>1.8</java.version>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+	</properties>
 	
 	<dependencies>
+		<!-- Junit 5 -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.0</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<!-- Pitest with Junit 5 -->
+		<dependency>
+			<groupId>org.pitest</groupId>
+			<artifactId>pitest-junit5-plugin</artifactId>
+			<version>0.9</version>
+		</dependency>
+		
+		<!-- Checkstyle -->
+		<dependency>
+			<groupId>com.puppycrawl.tools</groupId>
+			<artifactId>checkstyle</artifactId>
+			<version>8.45</version>
 		</dependency>
 	</dependencies>
 	
 	<build>
 		<plugins>
+			<!-- Maven compiler. -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
-				<version>3.3</version>
 			</plugin>
+			
+			<!-- Jar plugin. Creates jar with manifest mainClass attribute -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<archive>
+						<manifest>
+							<mainClass>tiralabrashakki.ChessGame</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			
+			<!-- Compile to executable jar with dependencies with: mvn clean compile assembly:single -->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>tiralabrashakki.ChessGame</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+			
+			<!-- Required for Junit 5 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
+			</plugin>
+			
+			<!-- Pit mutation tests. Run with mvn org.pitest:pitest-maven:mutationCoverage or mvn test -->
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
-				<version>1.1.8</version>
+				<version>1.6.8</version>
+				
+				<!-- Pit tests will be run with maven's test phase -->
+				<executions>
+					<execution>
+						<id>pit-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>mutationCoverage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Checkstyle. Run with mvn site -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.7.1</version>
+			</plugin>
+			
+			<!-- Exec maven plugin. Can run the project with mvn exec:java -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>tiralabrashakki.ChessGame</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

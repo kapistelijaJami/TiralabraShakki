@@ -1,6 +1,7 @@
 package tiralabrashakki;
 
 import java.util.ArrayList;
+import tiralabrashakki.ai.AlphaBeta;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 
 public class ChessGame {
@@ -8,6 +9,20 @@ public class ChessGame {
 		Board board = new Board();
 		
 		printBoard(board);
+		
+		AlphaBeta ab = new AlphaBeta();
+		
+		System.out.println("START");
+		Move move = ab.findBestMove(board, 6);
+		board.makeMove(move);
+		printBoard(board);
+		
+		move = ab.findBestMove(board, 6);
+		board.makeMove(move);
+		printBoard(board);
+		
+		
+		/*printBoard(board);
 		//printMoves(board);
 		
 		board.makeMove(Move.createMove(board, 4, 6, 4, 4));
@@ -29,7 +44,7 @@ public class ChessGame {
 		
 		board.unmakeMove(move);
 		printBoard(board);
-		//printMoves(board);
+		//printMoves(board);*/
 	}
 	
 	public static void printBoard(Board board) {
@@ -67,8 +82,7 @@ public class ChessGame {
 			System.out.print((char)(i + 'a') + ". ");
 		}
 		
-		System.out.println("");
-		System.out.println("");
+		System.out.println("\n\n");
 	}
 	
 	public static void printMoves(Board board) {

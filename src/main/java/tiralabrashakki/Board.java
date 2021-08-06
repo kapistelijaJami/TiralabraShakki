@@ -1,28 +1,36 @@
 package tiralabrashakki;
 
+import static tiralabrashakki.Constants.BOARD_SIZE;
 import tiralabrashakki.ai.TranspositionTable;
 
 public class Board {
-	private char[][] board = 
-			{{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'}, 
-			{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'}, 
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}, 
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}, 
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}, 
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}, 
-			{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'}, 
+	private char[][] board =
+			{{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+			{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
 			{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}};
-	private int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
+	
+	/**
+	 * 0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
+	 */
+	private int[][] pieceHasMoved;
 	private Location kingW;
 	private Location kingB;
 	private Long currentHash = null;
 	private PlayerColor colorTurn = PlayerColor.WHITE;
+	private int nbrOfPliesPlayed = 0;
 	
 	public Board() {
-		this.pieceHasMoved = new int[8][8];
+		this.pieceHasMoved = new int[BOARD_SIZE][BOARD_SIZE];
 		kingW = new Location(4, 7);
 		kingB = new Location(4, 0);
 		resetPieceHasMoved();
+		
+		generateHash();
 	}
 	
 	public char get(int x, int y) {
@@ -56,17 +64,25 @@ public class Board {
 			return pieceHasMoved[0][0] == 0 && pieceHasMoved[0][4] == 0;
 		}
 	}
-
+	
 	public Location getKingW() {
 		return kingW;
 	}
-
+	
 	public Location getKingB() {
 		return kingB;
 	}
 	
 	public PlayerColor getTurnColor() {
 		return colorTurn;
+	}
+	
+	public void setTurnColor(PlayerColor colorTurn) {
+		this.colorTurn = colorTurn;
+	}
+
+	public int getNbrOfPliesPlayed() {
+		return nbrOfPliesPlayed;
 	}
 	
 	private void resetPieceHasMoved() {
@@ -94,7 +110,7 @@ public class Board {
 			pieceHasMoved[start.getY() + 1][start.getX()] = 2;
 		}
 		
-		if (move.isIsEnpassant()) {
+		if (move.isEnpassant()) {
 			board[start.getY()][dest.getX()] = ' ';
 		}
 		
@@ -102,6 +118,7 @@ public class Board {
 		board[start.getY()][start.getX()] = ' ';
 		pieceHasMoved[start.getY()][start.getX()] = 1;
 		
+		nbrOfPliesPlayed++;
 		colorTurn = colorTurn.opposite();
 	}
 	
@@ -122,7 +139,7 @@ public class Board {
 		
 		board[start.getY()][start.getX()] = move.getPiece();
 		
-		if (move.isIsEnpassant()) {
+		if (move.isEnpassant()) {
 			board[dest.getY()][dest.getX()] = ' ';
 			board[start.getY()][dest.getX()] = move.getTakes();
 		} else {
@@ -135,6 +152,7 @@ public class Board {
 		
 		remakeEnPassantMarker(move.getErasedEnPassant());
 		
+		nbrOfPliesPlayed--;
 		colorTurn = colorTurn.opposite();
 	}
 	
@@ -154,8 +172,12 @@ public class Board {
 		return isInside(x) && isInside(y);
 	}
 	
-	public void updateHashMake(Move move) { //TODO: keep track of hash and only update it by little when making and unmaking moves. Updates captures, moves, colorTurn etc. You can toggle pieces/attributes with the same XOR key.
-		long hash = getHash();
+	/*TODO: keep track of hash and only update it
+	by little when making and unmaking moves.
+	Updates captures, moves, colorTurn etc. You can
+	toggle pieces/attributes with the same XOR key.*/
+	public void updateHashMake(Move move) {
+		long hash = getHash(); //needs to be up to date before making a move
 	}
 	
 	public void updateHashUnmake(Move move) {
@@ -164,20 +186,23 @@ public class Board {
 	
 	public long getHash() {
 		if (currentHash == null) {
-			currentHash = TranspositionTable.generateHash(this);
+			generateHash();
 		}
 		return currentHash;
 	}
 	
+	private void generateHash() {
+		currentHash = TranspositionTable.generateHash(this);
+	}
+	
 	private Location eraseEnPassantMarker() {
-		int y = 2;
-		if (colorTurn.isWhite()) {
-			y = 5;
-		}
 		for (int x = 0; x < 8; x++) {
-			if (pieceHasMoved[y][x] == 2) {
-				pieceHasMoved[y][x] = 1;
-				return new Location(x, y);
+			if (pieceHasMoved[5][x] == 2) {
+				pieceHasMoved[5][x] = 1;
+				return new Location(x, 5);
+			} else if (pieceHasMoved[2][x] == 2) {
+				pieceHasMoved[2][x] = 1;
+				return new Location(x, 2);
 			}
 		}
 		

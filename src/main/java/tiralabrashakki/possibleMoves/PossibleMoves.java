@@ -58,7 +58,7 @@ public class PossibleMoves {
 	 * @param board
 	 * @param move
 	 * @param colorTurn
-	 * @return 
+	 * @return If move was possible or not
 	 */
 	public static boolean testMoveKingSafety(Board board, Move move, PlayerColor colorTurn) {
 		board.makeMove(move);

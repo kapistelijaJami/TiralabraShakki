@@ -6,36 +6,33 @@ import tiralabrashakki.Board;
 import tiralabrashakki.PlayerColor;
 
 public class TranspositionTable {
-	private static long[] pieceKeys;
-	private static long sideToMoveKey;
-	private static long[] castleKeys;
-	private static long[] enPassantKeys;
+	private static final long[] PIECE_KEYS = new long[12 * 64];
+	private static final long WHITE_TO_MOVE_KEY;
+	private static final long[] CASTLE_KEYS = new long[4];
+	private static final long[] EN_PASSANT_KEYS = new long[8];
 	
-	private static HashMap<Character, Integer> pieceLetterMap;
+	private static final HashMap<Character, Integer> PIECE_LETTER_MAP;
 	
 	public static HashMap<Long, TranspositionData> TABLE;
 	
 	static {
 		Random rand = new Random();
 		
-		pieceKeys = new long[12 * 64];
-		for (int i = 0; i < pieceKeys.length; i++) {
-			pieceKeys[i] = rand.nextLong(); //map piece to this with pieceNumber * 64 + (y * 8 + x)
+		for (int i = 0; i < PIECE_KEYS.length; i++) {
+			PIECE_KEYS[i] = rand.nextLong(); //map piece to this with pieceNumber * 64 + (y * 8 + x)
 		}
 		
-		sideToMoveKey = rand.nextLong();
+		WHITE_TO_MOVE_KEY = rand.nextLong();
 		
-		enPassantKeys = new long[8];
 		for (int i = 0; i < 8; i++) {
-			enPassantKeys[i] = rand.nextLong();
+			EN_PASSANT_KEYS[i] = rand.nextLong();
 		}
 		
-		castleKeys = new long[4];
 		for (int i = 0; i < 4; i++) {
-			castleKeys[i] = rand.nextLong();
+			CASTLE_KEYS[i] = rand.nextLong();
 		}
 		
-		pieceLetterMap = new HashMap<>();
+		PIECE_LETTER_MAP = new HashMap<>();
 		addPieces();
 		
 		TABLE = new HashMap<>();
@@ -47,9 +44,9 @@ public class TranspositionTable {
 		//hashKeys for pieces
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
-				int piece = pieceLetterMap.get(board.get(x, y));
+				int piece = PIECE_LETTER_MAP.get(board.get(x, y));
 				if (piece != -1) {
-					key ^= pieceKeys[piece * 64 + y * 8 + x];
+					key ^= PIECE_KEYS[piece * 64 + y * 8 + x];
 				}
 			}
 		}
@@ -57,28 +54,30 @@ public class TranspositionTable {
 		//hashKeys for en passant squares
 		for (int x = 0; x < 8; x++) {
 			if (board.isEnPassantSquare(x, 2) || board.isEnPassantSquare(x, 5)) {
-				key ^= enPassantKeys[x];
+				key ^= EN_PASSANT_KEYS[x];
 			}
 		}
 		
 		//hashKeys for castling rights
-		if (board.canCastleKingside(PlayerColor.WHITE)) key ^= castleKeys[0];
-		if (board.canCastleKingside(PlayerColor.BLACK)) key ^= castleKeys[1];
-		if (board.canCastleQueenside(PlayerColor.WHITE)) key ^= castleKeys[2];
-		if (board.canCastleQueenside(PlayerColor.BLACK)) key ^= castleKeys[3];
+		if (board.canCastleKingside(PlayerColor.WHITE)) key ^= CASTLE_KEYS[0];
+		if (board.canCastleKingside(PlayerColor.BLACK)) key ^= CASTLE_KEYS[1];
+		if (board.canCastleQueenside(PlayerColor.WHITE)) key ^= CASTLE_KEYS[2];
+		if (board.canCastleQueenside(PlayerColor.BLACK)) key ^= CASTLE_KEYS[3];
 		
-		key ^= sideToMoveKey;
+		if (board.getTurnColor().isWhite()) {
+			key ^= WHITE_TO_MOVE_KEY;
+		}
 		
 		return key;
 	}
 	
 	private static void addPieces() {
-		pieceLetterMap.put(' ', -1);
+		PIECE_LETTER_MAP.put(' ', -1);
 		
 		char[] pieceLetters = new char[] {'P', 'R', 'N', 'B', 'Q', 'K', 'p', 'r', 'n', 'b', 'q', 'k'};
 		
 		for (int i = 0; i < pieceLetters.length; i++) {
-			pieceLetterMap.put(pieceLetters[i], i);
+			PIECE_LETTER_MAP.put(pieceLetters[i], i);
 		}
 	}
 }

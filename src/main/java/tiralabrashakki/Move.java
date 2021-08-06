@@ -10,10 +10,6 @@ public class Move {
 	private Location erasedEnPassant = null;
 	private boolean isEnpassant = false;
 	
-	private Move(Location start, Location dest, char piece, boolean firstMoveForPiece) {
-		this(start, dest, piece, ' ', firstMoveForPiece);
-	}
-	
 	private Move(Location start, Location dest, char piece, char takes, boolean firstMoveForPiece) {
 		this.start = start;
 		this.dest = dest;
@@ -22,15 +18,15 @@ public class Move {
 		this.firstMoveForPiece = firstMoveForPiece;
 	}
 	
-	private static Move createBaseMove(Board board, int startX, int startY, int destX, int destY) {
-		return new Move(new Location(startX, startY), new Location(destX, destY), board.get(startX, startY), board.get(destX, destY), !board.pieceHasMoved(startX, startY));
-	}
-	
 	public static Move createMove(Board board, int startX, int startY, int destX, int destY) {
 		if (Character.toUpperCase(board.get(startX, startY)) == 'P' && board.get(destX, destY) == ' ' && startX != destX) {
 			return createMoveEnPassant(board, startX, startY, destX, destY);
 		}
 		return createBaseMove(board, startX, startY, destX, destY);
+	}
+	
+	private static Move createBaseMove(Board board, int startX, int startY, int destX, int destY) {
+		return new Move(new Location(startX, startY), new Location(destX, destY), board.get(startX, startY), board.get(destX, destY), !board.pieceHasMoved(startX, startY));
 	}
 	
 	private static Move createMoveEnPassant(Board board, int startX, int startY, int destX, int destY) {
@@ -76,12 +72,8 @@ public class Move {
 		this.erasedEnPassant = erasedEnPassant;
 	}
 
-	public boolean isIsEnpassant() {
+	public boolean isEnpassant() {
 		return isEnpassant;
-	}
-
-	public void setIsEnpassant(boolean isEnpassant) {
-		this.isEnpassant = isEnpassant;
 	}
 	
 	@Override
