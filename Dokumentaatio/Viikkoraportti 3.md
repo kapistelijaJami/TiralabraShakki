@@ -9,7 +9,7 @@ Lisäsin pit mutaatiotestit toimimaan JUnit 5 testien kanssa, ja laitoin checkst
 Seuraavaksi aloitan algoritmin nopeuttamista, ja omien tietorakenteiden tekemistä. Toteutan transposition tablen, joka käyttää HashMappia, ja ajattelin, että ArrayListin sijaan toteuttaisin kaksisuuntaisen LinkedListin, koska se mahdollistaa mahdollisten siirtojen generoimisessa niiden sijoittamisen ensimmäiseksi (O(1) ajassa), tai helposti alkupäähän ilman että tarvitsee koko loppulistaa siirtää oikealle. Pystyn myös LinkedLististä poppaamaan transposition tablesta löytyvän parhaan siirron ensimmäiseksi samalla idealla. Tätä voi myös käyttää HashMapin collisioiden listana. Ja jos ehtii, niin saatan aloittaa UI:n tekemistä.
 
 
-**Kysymys ohjaajalle**: Miten pit raportin ja checkstylen tulisi olla näkyvillä viikkopalautuksissa? Nyt vain kopioin sen kansion minkä ne teki [Dokumentaatioon](Dokumentaatio/) sellaisenaan.
+**Kysymys ohjaajalle**: Miten pit raportin ja checkstylen tulisi olla näkyvillä viikkopalautuksissa? Nyt vain kopioin sen kansion minkä ne teki [Dokumentaatioon](./) sellaisenaan.
 Ja kuinka tarkasti tuota checkstylea pitää noudattaa? Kun sitä tutkin, niin se sisältää paljon turhia erroreita, ja aika monen niiden kanssa olen eri mieltä muutenkin. Tämä on kuitenkin minun oma projekti, ja pyrin pitämään sen mahdollisimman selkeänä joka tapauksessa, mutta silti omanlaisena (esim tabs > spaces).
 
 
