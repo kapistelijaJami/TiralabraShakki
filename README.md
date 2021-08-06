@@ -1,8 +1,8 @@
 # TiralabraShakki
 
 * [Määrittelydokumentti](Dokumentaatio/Määrittelydokumentti.md)
-* [Pit raportti](https://kapistelijajami.github.io/TiralabraShakki/Pit%20raportti/)
-* [Checkstyle](https://kapistelijajami.github.io/TiralabraShakki/Checkstyle/checkstyle.html)
+* [Pit raportti](https://kapistelijajami.github.io/TiralabraShakki/Dokumentaatio/Pit%20raportti/)
+* [Checkstyle](https://kapistelijajami.github.io/TiralabraShakki/Dokumentaatio/Checkstyle/checkstyle.html)
 
 * **Viikkoraportit**
 	* [Viikkoraportti 1](Dokumentaatio/Viikkoraportti%201.md)

@@ -1,14 +1,22 @@
 package tiralabrashakki.ai;
 
 import tiralabrashakki.Board;
+import static tiralabrashakki.Constants.BISHOP_PAIR;
+import static tiralabrashakki.Constants.BISHOP_VAL;
+import static tiralabrashakki.Constants.BOARD_SIZE;
 import static tiralabrashakki.Constants.CHECKMATE_VAL;
+import static tiralabrashakki.Constants.KING_VAL;
+import static tiralabrashakki.Constants.KNIGHT_VAL;
+import static tiralabrashakki.Constants.PAWN_VAL;
+import static tiralabrashakki.Constants.QUEEN_VAL;
+import static tiralabrashakki.Constants.ROOK_VAL;
 import static tiralabrashakki.Constants.STALEMATE_VAL;
 import tiralabrashakki.Location;
 import tiralabrashakki.PlayerColor;
 
 public class Heuristics {
 	
-	static int[][] pawnPosition = {
+	private static final int[][] pawnPosition = {
         { 0,  0,  0,  0,  0,  0,  0,  0},
         {50, 50, 50, 50, 50, 50, 50, 50},
         {10, 10, 20, 30, 30, 20, 10, 10},
@@ -17,7 +25,7 @@ public class Heuristics {
         { 5, -5,-10,  0,  0,-10, -5,  5},
         { 5, 10, 10,-20,-20, 10, 10,  5},
         { 0,  0,  0,  0,  0,  0,  0,  0}};
-    static int[][] knightPosition = {
+    private static final int[][] knightPosition = {
         {-50,-40,-30,-30,-30,-30,-40,-50},
         {-40,-20,  0,  0,  0,  0,-20,-40},
         {-30,  0, 10, 15, 15, 10,  0,-30},
@@ -26,7 +34,7 @@ public class Heuristics {
         {-30,  5, 10, 15, 15, 10,  5,-30},
         {-40,-20,  0,  5,  5,  0,-20,-40},
         {-50,-40,-30,-30,-30,-30,-40,-50}};
-    static int[][] bishopPosition = {
+    private static final int[][] bishopPosition = {
         {-20,-10,-10,-10,-10,-10,-10,-20},
         {-10,  0,  0,  0,  0,  0,  0,-10},
         {-10,  0,  5, 10, 10,  5,  0,-10},
@@ -35,7 +43,7 @@ public class Heuristics {
         {-10, 10, 10, 10, 10, 10, 10,-10},
         {-10,  5,  0,  0,  0,  0,  5,-10},
         {-20,-10,-10,-10,-10,-10,-10,-20}};
-	static int[][] rookPosition = {
+	private static final int[][] rookPosition = {
         { 0,  0,  0,  0,  0,  0,  0,  0},
         { 5, 10, 10, 10, 10, 10, 10,  5},
         {-5,  0,  0,  0,  0,  0,  0, -5},
@@ -44,7 +52,7 @@ public class Heuristics {
         {-5,  0,  0,  0,  0,  0,  0, -5},
         {-5,  0,  0,  0,  0,  0,  0, -5},
         { 0,  0,  0,  5,  5,  0,  0,  0}};
-    static int[][] queenPosition = {
+    private static final int[][] queenPosition = {
         {-20,-10,-10, -5, -5,-10,-10,-20},
         {-10,  0,  0,  0,  0,  0,  0,-10},
         {-10,  0,  5,  5,  5,  5,  0,-10},
@@ -53,7 +61,7 @@ public class Heuristics {
         {-10,  5,  5,  5,  5,  5,  0,-10},
         {-10,  0,  5,  0,  0,  0,  0,-10},
         {-20,-10,-10, -5, -5,-10,-10,-20}};
-    static int[][] kingMidPosition = {
+    private static final int[][] kingMidPosition = {
         {-30,-40,-40,-50,-50,-40,-40,-30},
         {-30,-40,-40,-50,-50,-40,-40,-30},
         {-30,-40,-40,-50,-50,-40,-40,-30},
@@ -62,7 +70,7 @@ public class Heuristics {
         {-10,-20,-20,-20,-20,-20,-20,-10},
         { 20, 20,  0,  0,  0,  0, 20, 20},
         { 20, 30, 10,  0,  0, 10, 30, 20}};
-    static int[][] kingEndPosition = {
+    private static final int[][] kingEndPosition = {
         {-50,-40,-30,-20,-20,-30,-40,-50},
         {-30,-20,-10,  0,  0,-10,-20,-30},
         {-30,-10, 20, 30, 30, 20,-10,-30},
@@ -101,8 +109,8 @@ public class Heuristics {
 		int whiteBishopCount = 0;
 		int blackBishopCount = 0;
 		
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
 				char c = board.get(x, y);
 				if (c == ' ') {
 					continue;
@@ -117,16 +125,16 @@ public class Heuristics {
 				
 				switch (c) {
 					case 'P':
-						points += 100 * multiplier;
+						points += PAWN_VAL * multiplier;
 						break;
 					case 'R':
-						points += 500 * multiplier;
+						points += ROOK_VAL * multiplier;
 						break;
 					case 'N':
-						points += 300 * multiplier;
+						points += KNIGHT_VAL * multiplier;
 						break;
 					case 'B':
-						points += 300 * multiplier;
+						points += BISHOP_VAL * multiplier;
 						if (multiplier == 1) {
 							whiteBishopCount++;
 						} else {
@@ -134,17 +142,17 @@ public class Heuristics {
 						}
 						break;
 					case 'Q':
-						points += 900 * multiplier;
+						points += QUEEN_VAL * multiplier;
 						break;
 					case 'K':
-						points += 10000 * multiplier;
+						points += KING_VAL * multiplier;
 						break;
 				}
 			}
 		}
 		
-		if (whiteBishopCount == 2) points += 50;
-		if (blackBishopCount == 2) points -= 50;
+		if (whiteBishopCount == 2) points += BISHOP_PAIR;
+		if (blackBishopCount == 2) points -= BISHOP_PAIR;
 		
 		return points;
 	}
@@ -153,8 +161,8 @@ public class Heuristics {
 		int points = 0;
 		int pieces = 0;
 		
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
 				char c = board.get(x, y);
 				if (c == ' ') {
 					continue;
