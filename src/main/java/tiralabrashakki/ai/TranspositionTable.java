@@ -3,13 +3,14 @@ package tiralabrashakki.ai;
 import java.util.HashMap;
 import java.util.Random;
 import tiralabrashakki.Board;
+import static tiralabrashakki.Constants.BOARD_SIZE;
 import tiralabrashakki.PlayerColor;
 
 public class TranspositionTable {
 	private static final long[] PIECE_KEYS = new long[12 * 64];
 	private static final long WHITE_TO_MOVE_KEY;
 	private static final long[] CASTLE_KEYS = new long[4];
-	private static final long[] EN_PASSANT_KEYS = new long[8];
+	private static final long[] EN_PASSANT_KEYS = new long[BOARD_SIZE];
 	
 	private static final HashMap<Character, Integer> PIECE_LETTER_MAP;
 	
@@ -24,11 +25,11 @@ public class TranspositionTable {
 		
 		WHITE_TO_MOVE_KEY = rand.nextLong();
 		
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < EN_PASSANT_KEYS.length; i++) {
 			EN_PASSANT_KEYS[i] = rand.nextLong();
 		}
 		
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < CASTLE_KEYS.length; i++) {
 			CASTLE_KEYS[i] = rand.nextLong();
 		}
 		
@@ -42,17 +43,17 @@ public class TranspositionTable {
 		long key = 0;
 		
 		//hashKeys for pieces
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
 				int piece = PIECE_LETTER_MAP.get(board.get(x, y));
 				if (piece != -1) {
-					key ^= PIECE_KEYS[piece * 64 + y * 8 + x];
+					key ^= PIECE_KEYS[piece * 64 + y * BOARD_SIZE + x];
 				}
 			}
 		}
 		
 		//hashKeys for en passant squares
-		for (int x = 0; x < 8; x++) {
+		for (int x = 0; x < BOARD_SIZE; x++) {
 			if (board.isEnPassantSquare(x, 2) || board.isEnPassantSquare(x, 5)) {
 				key ^= EN_PASSANT_KEYS[x];
 			}
