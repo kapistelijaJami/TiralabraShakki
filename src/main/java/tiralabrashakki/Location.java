@@ -28,4 +28,30 @@ public class Location {
 		this.x = loc.x;
 		this.y = loc.y;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		
+		if (getClass() != o.getClass()) {
+			return false;
+		}
+		
+		Location loc = (Location) o;
+		return x == loc.x && y == loc.y;
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 31 * hash + x;
+		hash = 31 * hash + y;
+		
+		return hash;
+	}
 }

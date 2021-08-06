@@ -77,6 +77,32 @@ public class Move {
 	}
 	
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		
+		if (getClass() != o.getClass()) {
+			return false;
+		}
+		
+		Move move = (Move) o;
+		return start.equals(move.start) && dest.equals(move.dest);
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 31 * hash + start.hashCode();
+		hash = 31 * hash + dest.hashCode();
+		
+		return hash;
+	}
+	
+	@Override
 	public String toString() {
 		String ifTakes = "";
 		if (takes != ' ') {
