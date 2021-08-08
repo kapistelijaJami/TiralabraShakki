@@ -1,7 +1,6 @@
 package tiralabrashakki;
 
 import static tiralabrashakki.Constants.BOARD_SIZE;
-import tiralabrashakki.ai.TranspositionTable;
 
 public class Board {
 	private char[][] board =
@@ -14,10 +13,8 @@ public class Board {
 			{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
 			{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}};
 	
-	/**
-	 * 0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
-	 */
-	private int[][] pieceHasMoved;
+	
+	private int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
 	private Location kingW;
 	private Location kingB;
 	private Long currentHash = null;
@@ -97,7 +94,7 @@ public class Board {
 		Location start = move.getStart();
 		Location dest = move.getDest();
 		
-		//TODO: castle and promotion
+		//TODO: promotion
 		
 		move.setErasedEnPassant(eraseEnPassantMarker());
 		
@@ -112,21 +109,21 @@ public class Board {
 		
 		if (move.isEnpassant()) {
 			board[start.getY()][dest.getX()] = ' ';
+		} else if (move.isCastle()) {
+			makeCastle(start, dest);
 		}
 		
-		board[dest.getY()][dest.getX()] = move.getPiece();
-		board[start.getY()][start.getX()] = ' ';
-		pieceHasMoved[start.getY()][start.getX()] = 1;
+		movePiece(start, dest);
 		
-		nbrOfPliesPlayed++;
 		colorTurn = colorTurn.opposite();
+		nbrOfPliesPlayed++;
 	}
 	
 	public void unmakeMove(Move move) {
 		Location start = move.getStart();
 		Location dest = move.getDest();
 		
-		//TODO: castle and promotion
+		//TODO: promotion
 		
 		setKingPosition(dest, start);
 		
@@ -137,23 +134,21 @@ public class Board {
 			pieceHasMoved[start.getY() + 1][start.getX()] = 1;
 		}
 		
-		board[start.getY()][start.getX()] = move.getPiece();
-		
 		if (move.isEnpassant()) {
-			board[dest.getY()][dest.getX()] = ' ';
+			unmovePiece(start, dest, ' ', move.isFirstMoveForPiece());
 			board[start.getY()][dest.getX()] = move.getTakes();
 		} else {
-			board[dest.getY()][dest.getX()] = move.getTakes();
+			unmovePiece(start, dest, move.getTakes(), move.isFirstMoveForPiece());
 		}
 		
-		if (move.isFirstMoveForPiece()) {
-			pieceHasMoved[start.getY()][start.getX()] = 0;
+		if (move.isCastle()) {
+			unmakeCastle(start, dest);
 		}
 		
 		remakeEnPassantMarker(move.getErasedEnPassant());
 		
-		nbrOfPliesPlayed--;
 		colorTurn = colorTurn.opposite();
+		nbrOfPliesPlayed--;
 	}
 	
 	public void setKingPosition(Location start, Location dest) {
@@ -187,12 +182,15 @@ public class Board {
 	public long getHash() {
 		if (currentHash == null) {
 			generateHash();
+			return currentHash;
 		}
+		
+		generateHash(); //TODO: remove this when board can keep track of the hash itself
 		return currentHash;
 	}
 	
 	private void generateHash() {
-		currentHash = TranspositionTable.generateHash(this);
+		currentHash = ChessGame.TT.generateHash(this);
 	}
 	
 	private Location eraseEnPassantMarker() {
@@ -214,5 +212,58 @@ public class Board {
 			return;
 		}
 		pieceHasMoved[location.getY()][location.getX()] = 2;
+	}
+	
+	/**
+	 * Moves only the rook during a castle. King is moved normally in makeMove.
+	 * @param start
+	 * @param dest 
+	 */
+	private void makeCastle(Location start, Location dest) {
+		boolean kingside = false;
+		
+		if (start.getX() < dest.getX()) {
+			kingside = true;
+		}
+		
+		if (kingside) {
+			movePiece(start.getX() + 3, start.getY(), start.getX() + 1, start.getY());
+		} else {
+			movePiece(start.getX() - 4, start.getY(), start.getX() - 1, start.getY());
+		}
+	}
+	
+	private void unmakeCastle(Location start, Location dest) {
+		boolean kingside = false;
+		
+		if (start.getX() < dest.getX()) {
+			kingside = true;
+		}
+		
+		if (kingside) {
+			unmovePiece(start.getX() + 3, start.getY(), start.getX() + 1, start.getY(), ' ', true);
+		} else {
+			unmovePiece(start.getX() - 4, start.getY(), start.getX() - 1, start.getY(), ' ', true);
+		}
+	}
+	
+	private void movePiece(Location start, Location dest) {
+		movePiece(start.getX(), start.getY(), dest.getX(), dest.getY());
+	}
+	
+	private void movePiece(int startX, int startY, int destX, int destY) {
+		board[destY][destX] = board[startY][startX];
+		board[startY][startX] = ' ';
+		pieceHasMoved[startY][startX] = 1;
+	}
+	
+	private void unmovePiece(Location start, Location dest, char takes, boolean isFirstMoveForPiece) {
+		unmovePiece(start.getX(), start.getY(), dest.getX(), dest.getY(), takes, isFirstMoveForPiece);
+	}
+	
+	private void unmovePiece(int startX, int startY, int destX, int destY, char takes, boolean isFirstMoveForPiece) {
+		board[startY][startX] = board[destY][destX];
+		board[destY][destX] = takes;
+		pieceHasMoved[startY][startX] = isFirstMoveForPiece ? 0 : 1;
 	}
 }

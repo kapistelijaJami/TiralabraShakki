@@ -62,7 +62,7 @@ public class PossibleMovesTest {
 	
 	@Test
 	public void checkAllPossibleMovesTest() {
-		int[][] locations = new int[][] {
+		int[][] allPossibleMoves = new int[][] {
 			{0, 6, 0, 5},
 			{0, 6, 0, 4},
 			{1, 6, 1, 5},
@@ -86,8 +86,10 @@ public class PossibleMovesTest {
 		
 		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
 		
-		for (int[] loc : locations) {
+		for (int[] loc : allPossibleMoves ){
 			assertTrue(moves.contains(Move.createMove(board, loc[0], loc[1], loc[2], loc[3])));
 		}
+		
+		assertEquals(allPossibleMoves.length, moves.size());
 	}
 }

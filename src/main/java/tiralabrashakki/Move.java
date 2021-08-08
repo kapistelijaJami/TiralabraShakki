@@ -1,14 +1,15 @@
 package tiralabrashakki;
 
 public class Move {
-	private Location start;
-	private Location dest;
-	private char piece;
+	private final Location start;
+	private final Location dest;
+	private final char piece;
 	private char takes;
 	private boolean givesCheck = false;
-	private boolean firstMoveForPiece;
+	private final boolean firstMoveForPiece;
 	private Location erasedEnPassant = null;
 	private boolean isEnpassant = false;
+	private boolean isCastle = false;
 	
 	private Move(Location start, Location dest, char piece, char takes, boolean firstMoveForPiece) {
 		this.start = start;
@@ -21,6 +22,8 @@ public class Move {
 	public static Move createMove(Board board, int startX, int startY, int destX, int destY) {
 		if (Character.toUpperCase(board.get(startX, startY)) == 'P' && board.get(destX, destY) == ' ' && startX != destX) {
 			return createMoveEnPassant(board, startX, startY, destX, destY);
+		} else if (Character.toUpperCase(board.get(startX, startY)) == 'K' && (startX - destX == 2 || destX - startX == 2)) {
+			return createMoveCastle(board, startX, startY, destX, destY);
 		}
 		return createBaseMove(board, startX, startY, destX, destY);
 	}
@@ -33,6 +36,12 @@ public class Move {
 		Move move = createBaseMove(board, startX, startY, destX, destY);
 		move.isEnpassant = true;
 		move.takes = board.get(destX, startY);
+		return move;
+	}
+	
+	private static Move createMoveCastle(Board board, int startX, int startY, int destX, int destY) {
+		Move move = createBaseMove(board, startX, startY, destX, destY);
+		move.isCastle = true;
 		return move;
 	}
 	
@@ -75,6 +84,10 @@ public class Move {
 	public boolean isEnpassant() {
 		return isEnpassant;
 	}
+
+	public boolean isCastle() {
+		return isCastle;
+	}
 	
 	@Override
 	public boolean equals(Object o) {
@@ -85,7 +98,7 @@ public class Move {
 			return false;
 		}
 		
-		if (getClass() != o.getClass()) {
+		if (!(o instanceof Move)) {
 			return false;
 		}
 		

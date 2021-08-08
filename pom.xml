@@ -88,14 +88,14 @@
 				<version>3.0.0-M5</version>
 			</plugin>
 			
-			<!-- Pit mutation tests. Run with mvn org.pitest:pitest-maven:mutationCoverage or mvn test -->
+			<!-- Pit mutation tests. Run with mvn org.pitest:pitest-maven:mutationCoverage (or mvn test if uncommented) -->
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
 				<version>1.6.8</version>
 				
 				<!-- Pit tests will be run with maven's test phase -->
-				<executions>
+				<!--<executions>
 					<execution>
 						<id>pit-report</id>
 						<phase>test</phase>
@@ -103,7 +103,7 @@
 							<goal>mutationCoverage</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions>-->
 			</plugin>
 			
 			<!-- Checkstyle. Run with mvn site -->

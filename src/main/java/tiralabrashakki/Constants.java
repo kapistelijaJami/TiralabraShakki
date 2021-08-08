@@ -7,6 +7,8 @@ public class Constants {
 												//then it's automatically +25 from black perspective, and that doesnt make any sense
 												//Should probably give this from the perspective of root mover, so it's consistent throughout
 	
+	public static final int VALUE_UNKNOWN = 9999999;
+	
 	//piece values:
 	public static final int PAWN_VAL = 100;
 	public static final int ROOK_VAL = 500;

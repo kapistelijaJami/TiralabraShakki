@@ -1,11 +1,11 @@
 package tiralabrashakki;
 
 public class Location {
-	private int x, y;
+	private byte x, y;
 
 	public Location(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.x = (byte) x;
+		this.y = (byte) y;
 	}
 
 	public int getX() {
@@ -13,7 +13,7 @@ public class Location {
 	}
 
 	public void setX(int x) {
-		this.x = x;
+		this.x = (byte) x;
 	}
 
 	public int getY() {
@@ -21,7 +21,7 @@ public class Location {
 	}
 
 	public void setY(int y) {
-		this.y = y;
+		this.y = (byte) y;
 	}
 
 	public void set(Location loc) {

@@ -5,7 +5,7 @@ import tiralabrashakki.Board;
 import tiralabrashakki.Move;
 import tiralabrashakki.PlayerColor;
 
-public class PossibleMovesPawn extends PossibleMoves {
+public class PossibleMovesPawn extends PossibleMoves { //TODO: promotion
 	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves) {
 		PlayerColor colorTurn = PlayerColor.BLACK;
 		int dir = 1;

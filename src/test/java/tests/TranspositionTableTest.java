@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import tiralabrashakki.Board;
+import tiralabrashakki.ChessGame;
 import tiralabrashakki.Move;
 import tiralabrashakki.ai.TranspositionTable;
 
@@ -34,24 +35,24 @@ public class TranspositionTableTest {
 	@Test
 	public void hashingTest() {
 		Board board = new Board();
-		long hash = TranspositionTable.generateHash(board);
+		long hash = ChessGame.TT.generateHash(board);
 		
-		assertEquals(hash, TranspositionTable.generateHash(board));
+		assertEquals(hash, ChessGame.TT.generateHash(board));
 		
 		Move move = Move.createMove(board, 4, 6, 4, 4);
 		board.makeMove(move);
 		
-		long hash2 = TranspositionTable.generateHash(board);
+		long hash2 = ChessGame.TT.generateHash(board);
 		
 		assertNotEquals(hash, hash2);
 		
-		assertEquals(hash2, TranspositionTable.generateHash(board));
+		assertEquals(hash2, ChessGame.TT.generateHash(board));
 		
 		board.unmakeMove(move);
 		
-		assertEquals(hash, TranspositionTable.generateHash(board));
+		assertEquals(hash, ChessGame.TT.generateHash(board));
 		
 		board.makeMove(move);
-		assertEquals(hash2, TranspositionTable.generateHash(board));
+		assertEquals(hash2, ChessGame.TT.generateHash(board));
 	}
 }
