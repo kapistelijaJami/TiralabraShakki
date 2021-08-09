@@ -1,7 +1,7 @@
 package tiralabrashakki.ai;
 
 public class TT {
-	private TranspositionData[] TT = new TranspositionData[8000000];
+	private TranspositionData[] TT = new TranspositionData[18000000];
 	
 	public void put(long hash, TranspositionData data) { //TODO: dont overwrite if different hash and it's possibly a pv move (unless you save pv somewhere else)
 		int id = (int) (Math.abs(hash) % TT.length);

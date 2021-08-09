@@ -21,7 +21,7 @@ public class TranspositionTable {
 	public TT TABLE = new TT();
 	
 	public TranspositionTable() {
-		Random rand = new Random();
+		Random rand = new Random(2123456789); //seed so I can test the performance of my algorithm between edits
 		
 		for (int i = 0; i < PIECE_KEYS.length; i++) {
 			PIECE_KEYS[i] = rand.nextLong(); //map piece to this with pieceNumber * 64 + (y * 8 + x)
@@ -72,6 +72,10 @@ public class TranspositionTable {
 		}
 		
 		return key;
+	}
+	
+	public int getPieceNumberByChar(char c) {
+		return PIECE_LETTER_MAP.get(c);
 	}
 	
 	private void addPieces() {

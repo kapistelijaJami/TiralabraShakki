@@ -14,6 +14,27 @@ public class Board {
 			{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}};
 	
 	
+	/*private char[][] board = 
+			{{'r', ' ', ' ', ' ', 'k', ' ', ' ', 'r'},
+			{'p', ' ', 'p', 'p', 'q', 'p', 'b', ' '},
+			{'b', 'n', ' ', ' ', 'p', 'n', 'p', ' '},
+			{' ', ' ', ' ', 'P', 'N', ' ', ' ', ' '},
+			{' ', 'p', ' ', ' ', 'P', ' ', ' ', ' '},
+			{' ', ' ', 'N', ' ', ' ', 'Q', ' ', 'p'},
+			{'P', 'P', 'P', 'B', 'B', 'P', 'P', 'P'},
+			{'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}};*/ //kiwipete
+	
+	/*private char[][] board = 
+			{{' ', ' ', ' ', ' ', ' ', 'N', ' ', ' '},
+			{'r', ' ', ' ', ' ', 'B', 'p', 'k', 'p'},
+			{' ', ' ', ' ', ' ', ' ', ' ', 'p', ' '},
+			{' ', ' ', ' ', 'q', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', 'Q', ' ', 'K'},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}};*/ //forced mate
+	
+	
 	private int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
 	private Location kingW;
 	private Location kingB;
@@ -28,6 +49,29 @@ public class Board {
 		resetPieceHasMoved();
 		
 		generateHash();
+	}
+	
+	public Board copy() {
+		Board b = new Board();
+		for (int y = 0; y < this.pieceHasMoved.length; y++) {
+			for (int x = 0; x < this.pieceHasMoved[0].length; x++) {
+				b.pieceHasMoved[y][x] = this.pieceHasMoved[y][x];
+			}
+		}
+		
+		for (int y = 0; y < this.board.length; y++) {
+			for (int x = 0; x < this.board[0].length; x++) {
+				b.board[y][x] = this.board[y][x];
+			}
+		}
+		
+		b.kingW = this.kingW;
+		b.kingB = this.kingB;
+		b.currentHash = this.currentHash;
+		b.colorTurn = this.colorTurn;
+		b.nbrOfPliesPlayed = this.nbrOfPliesPlayed;
+		
+		return b;
 	}
 	
 	public char get(int x, int y) {
@@ -98,7 +142,7 @@ public class Board {
 		
 		move.setErasedEnPassant(eraseEnPassantMarker());
 		
-		setKingPosition(start, dest);
+		updateKingPosition(start, dest);
 		
 		//creates en passant marker when pawn double jumps
 		if (move.getPiece() == 'P' && start.getY() - dest.getY() == 2) {
@@ -125,7 +169,7 @@ public class Board {
 		
 		//TODO: promotion
 		
-		setKingPosition(dest, start);
+		updateKingPosition(dest, start);
 		
 		//removes en passant marker if pawn double jumped
 		if (move.getPiece() == 'P' && start.getY() - dest.getY() == 2) {
@@ -151,7 +195,7 @@ public class Board {
 		nbrOfPliesPlayed--;
 	}
 	
-	public void setKingPosition(Location start, Location dest) {
+	public void updateKingPosition(Location start, Location dest) {
 		if (board[start.getY()][start.getX()] == 'K') {
 			kingW.set(dest);
 		} else if (board[start.getY()][start.getX()] == 'k') {
@@ -266,4 +310,18 @@ public class Board {
 		board[destY][destX] = takes;
 		pieceHasMoved[startY][startX] = isFirstMoveForPiece ? 0 : 1;
 	}
+	
+	public void makeNullMove() {
+		colorTurn = colorTurn.opposite();
+		nbrOfPliesPlayed++;
+	}
+	
+	public void unmakeNullMove() {
+		colorTurn = colorTurn.opposite();
+		nbrOfPliesPlayed--;
+	}
+	
+	/*public Board copy() {
+		
+	}*/
 }

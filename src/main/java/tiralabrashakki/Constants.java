@@ -18,4 +18,7 @@ public class Constants {
 	public static final int KING_VAL = 10000;
 	
 	public static final int BISHOP_PAIR = 50;
+	
+	public static final int WIDTH = 900; //def: 900
+	public static final int HEIGHT = 900;
 }

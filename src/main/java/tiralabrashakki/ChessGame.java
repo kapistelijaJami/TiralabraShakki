@@ -18,15 +18,17 @@ public class ChessGame {
 	public static long nodes = 0;
 	
 	public static void main(String[] args) {
+		Game game = new Game();
+		game.start();
 		
-		AlphaBeta2 ab = new AlphaBeta2();
+		/*AlphaBeta2 ab = new AlphaBeta2();
 		Board board = new Board();
 		printBoard(board);
 		
-		int depth = 8;
+		int depth = 6;*/
 		
-		Move move = ab.findBestMove(board, depth);
-		System.out.println(board.getTurnColor() + " played: " + move);
+		/*Move move = ab.findBestMove(board, depth);
+		System.out.println(board.getTurnColor() + " played: " + move);*/
 		
 		
 		/*while (!PossibleMoves.getPossibleMoves(board).isEmpty()) {
@@ -36,32 +38,6 @@ public class ChessGame {
 			board.makeMove(move);
 			printBoard(board);
 		}*/
-		
-		
-		
-		/*printBoard(board);
-		//printMoves(board);
-		
-		board.makeMove(Move.createMove(board, 4, 6, 4, 4));
-		printBoard(board);
-		//printMoves(board);
-		
-		board.makeMove(Move.createMove(board, 4, 1, 4, 3));
-		printBoard(board);
-		//printMoves(board);
-		
-		board.makeMove(Move.createMove(board, 3, 6, 3, 4));
-		printBoard(board);
-		//printMoves(board);
-		
-		Move move = Move.createMove(board, 4, 3, 3, 4);
-		board.makeMove(move);
-		printBoard(board);
-		//printMoves(board);
-		
-		board.unmakeMove(move);
-		printBoard(board);
-		//printMoves(board);*/
 	}
 	
 	public static void printBoard(Board board) {

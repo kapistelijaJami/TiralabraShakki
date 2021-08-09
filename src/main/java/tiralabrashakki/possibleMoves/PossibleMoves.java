@@ -82,4 +82,10 @@ public class PossibleMoves {
 			possibleMoves.add(move); //TODO: add to the first in the list based on takes and checks, maybe implement linked list instead
 		}
 	}
+	
+	public static boolean isPossibleMove(Board board, Move move) {
+		ArrayList<Move> possibleMoves = getPossibleMoves(board);
+		
+		return possibleMoves.contains(move);
+	}
 }
