@@ -7,7 +7,7 @@ import tiralabrashakki.PlayerColor;
 import static tiralabrashakki.possibleMoves.PossibleMoves.isWhite;
 
 public class PossibleMovesKing extends PossibleMoves {
-	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves) {
+	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves, MoveCategory category) {
 		PlayerColor colorTurn = PlayerColor.BLACK;
 		if (isWhite(board.get(x, y))) {
 			colorTurn = PlayerColor.WHITE;
@@ -23,7 +23,7 @@ public class PossibleMovesKing extends PossibleMoves {
 						continue;
 					}
 					
-					addMoveIfKingSafe(board, Move.createMove(board, x, y, x + dirX, y + dirY), colorTurn, possibleMoves);
+					addMoveIfKingSafe(board, Move.createMove(board, x, y, x + dirX, y + dirY), colorTurn, possibleMoves, category);
 				}
 			}
 		}

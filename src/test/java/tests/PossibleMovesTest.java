@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import tiralabrashakki.Board;
 import tiralabrashakki.Location;
 import tiralabrashakki.Move;
+import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 
 public class PossibleMovesTest {
@@ -41,7 +42,7 @@ public class PossibleMovesTest {
 		board.makeMove(Move.createMove(board, 4, 1, 4, 3));
 		board.makeMove(Move.createMove(board, 6, 6, 6, 4));
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		
 		Move move = null;
 		for (Move m : moves) {
@@ -55,7 +56,7 @@ public class PossibleMovesTest {
 		
 		board.makeMove(move);
 		
-		moves = PossibleMoves.getPossibleMoves(board);
+		moves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		
 		assertEquals(0, moves.size());
 	}
@@ -84,7 +85,7 @@ public class PossibleMovesTest {
 			{6, 7, 5, 5},
 			{6, 7, 7, 5}};
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		
 		for (int[] loc : allPossibleMoves ){
 			assertTrue(moves.contains(Move.createMove(board, loc[0], loc[1], loc[2], loc[3])));

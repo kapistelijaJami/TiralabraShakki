@@ -1,6 +1,8 @@
 package tiralabrashakki;
 
-public class Move {
+import tiralabrashakki.ai.Heuristics;
+
+public class Move implements Comparable<Move> {
 	private final Location start;
 	private final Location dest;
 	private final char piece;
@@ -122,5 +124,38 @@ public class Move {
 			ifTakes = " takes: " + takes;
 		}
 		return (char)(start.getX() + 'a') + "" + (8 - start.getY()) + " -> " + (char)(dest.getX() + 'a') + "" + (8 - dest.getY()) + ifTakes;
+	}
+
+	public boolean isCapture() {
+		return takes != ' ';
+	}
+
+	public boolean isQuiet() {
+		return !isCapture() && !givesCheck();
+	}
+	
+	private int compareCaptures(Move o) {
+		return isCapture() && !o.isCapture() ? -1 : (isCapture() == o.isCapture() ? 0 : 1);
+	}
+	
+	/**
+	 * Material difference of captured piece and moved piece.
+	 * Higher value the more the move is worth.
+	 * @return 
+	 */
+	public int moveMaterialTradeValue() {
+		return Heuristics.pieceComparison(getTakes(), getPiece());
+	}
+
+	@Override
+	public int compareTo(Move o) {
+		int captures = compareCaptures(o);
+		if (captures == 0 && isCapture()) {
+			int val1 = this.moveMaterialTradeValue();
+			int val2 = o.moveMaterialTradeValue();
+			return val2 - val1;
+		}
+		
+		return captures;
 	}
 }

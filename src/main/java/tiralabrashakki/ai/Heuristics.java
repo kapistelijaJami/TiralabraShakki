@@ -224,6 +224,13 @@ public class Heuristics {
 		return points;
 	}
 	
+	/**
+	 * Returns the difference of the material value of the pieces.
+	 * Positive means first is more valuable, negative means second is more valuable.
+	 * @param first
+	 * @param second
+	 * @return 
+	 */
 	public static int pieceComparison(char first, char second) {
 		return pieceValue(first) - pieceValue(second);
 	}
@@ -234,15 +241,15 @@ public class Heuristics {
 			case 'P':
 				return PAWN_VAL;
 			case 'R':
-				return PAWN_VAL;
+				return ROOK_VAL;
 			case 'N':
-				return PAWN_VAL;
+				return KNIGHT_VAL;
 			case 'B':
-				return PAWN_VAL;
+				return BISHOP_VAL;
 			case 'Q':
-				return PAWN_VAL;
+				return QUEEN_VAL;
 			case 'K':
-				return PAWN_VAL;
+				return KING_VAL;
 			default:
 				return 0;
 		}

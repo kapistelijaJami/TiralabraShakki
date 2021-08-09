@@ -6,13 +6,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import static tiralabrashakki.Constants.BOARD_SIZE;
 import tiralabrashakki.ai.AlphaBeta2;
 import tiralabrashakki.ai.FindBestMoveThread;
+import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 
 public class Game extends Canvas implements Runnable {
@@ -34,12 +34,13 @@ public class Game extends Canvas implements Runnable {
 	private ArrayList<Move> currentPossibleMoves;
 	
 	private boolean isThinking = false;
+	private int depth = 6;
 	
 	public Game() {
 		window = new Window(Constants.WIDTH, Constants.HEIGHT, "Drill and Defend", this);
 		alphabeta = new AlphaBeta2();
 		board = new Board();
-		currentPossibleMoves = PossibleMoves.getPossibleMoves(board);
+		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 	}
 	
 	public synchronized void start() {
@@ -96,7 +97,7 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		isThinking = true;
-		new FindBestMoveThread(board, 6, alphabeta, Game::printMove).start();
+		new FindBestMoveThread(board, depth, alphabeta, this::printMove).start();
 	}
 	
 	public void makeBestMove() {
@@ -104,7 +105,7 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		isThinking = true;
-		new FindBestMoveThread(board, 6, alphabeta, this::makeMove).start();
+		new FindBestMoveThread(board, depth, alphabeta, this::makeMove).start();
 	}
 	
 	public void playFullGame() {
@@ -112,17 +113,18 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		isThinking = true;
-		new FindBestMoveThread(board, 6, alphabeta, this::keepMakingMoves).start();
+		new FindBestMoveThread(board, depth, alphabeta, this::keepMakingMoves).start();
 	}
 	
-	public static void printMove(Move move) {
+	public void printMove(Move move) {
 		System.out.println("Move was: " + move);
+		isThinking = false;
 	}
 	
 	public void makeMove(Move move) {
 		printMove(move);
 		board.makeMove(move);
-		currentPossibleMoves = PossibleMoves.getPossibleMoves(board);
+		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		isThinking = false;
 	}
 	
@@ -135,7 +137,7 @@ public class Game extends Canvas implements Runnable {
 			
 		}
 		
-		if (!PossibleMoves.getPossibleMoves(board).isEmpty()) {
+		if (!PossibleMoves.getPossibleMoves(board, LEGAL).isEmpty()) {
 			playFullGame();
 		}
 	}
@@ -283,5 +285,10 @@ public class Game extends Canvas implements Runnable {
 			return null;
 		}
 		return Move.createMove(board, highlightedSquare.x, highlightedSquare.y, target.x, target.y);
+	}
+
+	public void setDepth(int depth) {
+		System.out.println("Depth set to: " + depth);
+		this.depth = depth;
 	}
 }

@@ -14,15 +14,15 @@ public class PossibleMovesRook extends PossibleMoves {
 	 * @param y
 	 * @param possibleMoves
 	 */
-	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves) {
+	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves, MoveCategory category) {
 		PlayerColor colorTurn = PlayerColor.BLACK;
 		if (isWhite(board.get(x, y))) {
 			colorTurn = PlayerColor.WHITE;
 		}
 		
 		for (int dir = -1; dir < 2; dir += 2) {
-			checkVertical(board, possibleMoves, x, y, dir, colorTurn);
-			checkHorizontal(board, possibleMoves, x, y, dir, colorTurn);
+			checkVertical(board, possibleMoves, x, y, dir, colorTurn, category);
+			checkHorizontal(board, possibleMoves, x, y, dir, colorTurn, category);
 		}
 	}
 	
@@ -35,17 +35,17 @@ public class PossibleMovesRook extends PossibleMoves {
 	 * @param dir -1 or 1
 	 * @param colorTurn 
 	 */
-	private static void checkVertical(Board board, ArrayList<Move> possibleMoves, int x, int y, int dir, PlayerColor colorTurn) {
+	private static void checkVertical(Board board, ArrayList<Move> possibleMoves, int x, int y, int dir, PlayerColor colorTurn, MoveCategory category) {
 		for (int i = dir; board.isInside(y + i); i += dir) {
 			char c = board.get(x, y + i);
 			if (c != ' ') {
 				if (colorTurn.isEnemyPiece(c)) {
-					addMoveIfKingSafe(board, Move.createMove(board, x, y, x, y + i), colorTurn, possibleMoves);
+					addMoveIfKingSafe(board, Move.createMove(board, x, y, x, y + i), colorTurn, possibleMoves, category);
 				}
 				return;
 			}
 			
-			addMoveIfKingSafe(board, Move.createMove(board, x, y, x, y + i), colorTurn, possibleMoves);
+			addMoveIfKingSafe(board, Move.createMove(board, x, y, x, y + i), colorTurn, possibleMoves, category);
 		}
 	}
 	
@@ -58,17 +58,17 @@ public class PossibleMovesRook extends PossibleMoves {
 	 * @param dir -1 or 1
 	 * @param colorTurn 
 	 */
-	private static void checkHorizontal(Board board, ArrayList<Move> possibleMoves, int x, int y, int dir, PlayerColor colorTurn) {
+	private static void checkHorizontal(Board board, ArrayList<Move> possibleMoves, int x, int y, int dir, PlayerColor colorTurn, MoveCategory category) {
 		for (int i = dir; board.isInside(x + i); i += dir) {
 			char c = board.get(x + i, y);
 			if (c != ' ') {
 				if (colorTurn.isEnemyPiece(c)) {
-					addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y), colorTurn, possibleMoves);
+					addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y), colorTurn, possibleMoves, category);
 				}
 				return;
 			}
 			
-			addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y), colorTurn, possibleMoves);
+			addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y), colorTurn, possibleMoves, category);
 		}
 	}
 }

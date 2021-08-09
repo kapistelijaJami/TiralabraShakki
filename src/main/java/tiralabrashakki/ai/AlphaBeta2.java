@@ -7,6 +7,8 @@ import tiralabrashakki.Constants;
 import static tiralabrashakki.Constants.PAWN_VAL;
 import static tiralabrashakki.Constants.QUEEN_VAL;
 import tiralabrashakki.Move;
+import static tiralabrashakki.possibleMoves.MoveCategory.CAPTURES;
+import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
@@ -109,7 +111,7 @@ public class AlphaBeta2 {
 				return beta;
 		}
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		
 		if (inCheck && !moves.isEmpty()) {
 			depth = Math.max(1, depth);
@@ -184,9 +186,9 @@ public class AlphaBeta2 {
 	 * @return 
 	 */
 	private int quiescenceSearch(Board board, int depth, int alpha, int beta, boolean inCheck, int searchDepth) {
-		if (inCheck) {
+		/*if (inCheck) { //not sure if this should be in or not
 			return negamax(board, 1, alpha, beta, inCheck, searchDepth); //TODO: this caused a loop, needs to add to detect a mate (what about stalemates?), could just send the possiblemoves number here
-		}
+		}*/
 		ChessGame.nodes++;
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
 		
@@ -196,12 +198,12 @@ public class AlphaBeta2 {
 		if (data != null) {
 			hashMove = data.getMove(board);
 			
-			if (data.valueIsKnown() && data.flag == HashFlag.HASH_EXACT) {
+			if (data.valueIsKnown() /*&& data.flag == HashFlag.HASH_EXACT*/) { //these doesnt seem to do much, at least not in first move alone
 				return data.value;
 			}
 		}
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board); //TODO: change to only generating good captures, also add gives check moves, but see that it stops too
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, CAPTURES); //TODO: change to only generating good captures, also add gives check moves, but see that it stops too
 		
 		int standPat = Heuristics.evaluate(board, depth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
 		
@@ -213,7 +215,7 @@ public class AlphaBeta2 {
 		}
 		
 		//futility pruning
-		if (standPat + QUEEN_VAL < alpha) {
+		if (standPat + QUEEN_VAL + PAWN_VAL < alpha) {
 			return alpha;
 		}
 		
@@ -223,13 +225,14 @@ public class AlphaBeta2 {
 		
 		for (int i = 0; i < moves.size(); i++) {
 			Move move = moves.get(i);
-			if (/*!move.givesCheck() && */move.getTakes() == ' ') { //move is not a capture
+			if (/*!move.givesCheck() && */!move.isCapture()) { //move is not a capture
 				continue;
 			}
 			
-			if (Heuristics.pieceComparison(move.getPiece(), move.getTakes()) < 0) { //capturing loses material
+			//capturing loses material
+			/*if (move.moveMaterialTradeValue() < 0) { //this seems to slow down the search
 				continue;
-			}
+			}*/
 			
 			if (i > 2) {
 				int takesVal = Heuristics.pieceValue(move.getTakes());

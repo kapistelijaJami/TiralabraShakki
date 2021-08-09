@@ -8,6 +8,7 @@ import static tiralabrashakki.Constants.VALUE_UNKNOWN;
 import tiralabrashakki.Location;
 import tiralabrashakki.Move;
 import tiralabrashakki.PlayerColor;
+import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
@@ -97,7 +98,7 @@ public class AlphaBeta {
 			}
 		}
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		if (hashMove != null) {
 			sortHashMove(moves, hashMove);
 		}
@@ -152,7 +153,7 @@ public class AlphaBeta {
 			}
 		}
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		if (hashMove != null) {
 			sortHashMove(moves, hashMove);
 		}

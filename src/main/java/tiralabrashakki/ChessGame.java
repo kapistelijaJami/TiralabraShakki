@@ -6,6 +6,8 @@ import tiralabrashakki.ai.AlphaBeta2;
 import tiralabrashakki.ai.HashFlag;
 import tiralabrashakki.ai.TranspositionData;
 import tiralabrashakki.ai.TranspositionTable;
+import tiralabrashakki.possibleMoves.MoveCategory;
+import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
@@ -25,9 +27,9 @@ public class ChessGame {
 		Board board = new Board();
 		printBoard(board);
 		
-		int depth = 6;*/
+		int depth = 8;
 		
-		/*Move move = ab.findBestMove(board, depth);
+		Move move = ab.findBestMove(board, depth);
 		System.out.println(board.getTurnColor() + " played: " + move);*/
 		
 		
@@ -79,7 +81,7 @@ public class ChessGame {
 	}
 	
 	public static void printMoves(Board board) {
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board);
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		
 		for (Move move : moves) {
 			System.out.println(move);
