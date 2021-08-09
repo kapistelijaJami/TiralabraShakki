@@ -2,6 +2,7 @@ package tiralabrashakki;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -35,12 +36,17 @@ public class Game extends Canvas implements Runnable {
 	
 	private boolean isThinking = false;
 	private int depth = 6;
+	private ArrayList<Move> allMoves;
+	private final BufferedImage chessPieces;
 	
 	public Game() {
 		window = new Window(Constants.WIDTH, Constants.HEIGHT, "Drill and Defend", this);
 		alphabeta = new AlphaBeta2();
 		board = new Board();
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
+		
+		allMoves = new ArrayList<>();
+		chessPieces = ImageLoader.loadImage("/images/chessPieces.png");
 	}
 	
 	public synchronized void start() {
@@ -62,6 +68,7 @@ public class Game extends Canvas implements Runnable {
 		KeyInput input = new KeyInput(this);
 		this.addMouseListener(input);
 		this.addKeyListener(input);
+		this.addMouseMotionListener(input);
 		
 		setBoardSizes();
 	}
@@ -126,6 +133,12 @@ public class Game extends Canvas implements Runnable {
 		board.makeMove(move);
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		isThinking = false;
+		allMoves.add(move);
+	}
+	
+	public void undoMove() {
+		board.unmakeMove(allMoves.remove(allMoves.size() - 1));
+		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 	}
 	
 	public void keepMakingMoves(Move move) {
@@ -189,7 +202,6 @@ public class Game extends Canvas implements Runnable {
 		g.setColor(Color.BLACK);
 		g.fillRect(offset.x - 5, offset.y - 5, fullBoardSize + 10, fullBoardSize + 10);
 		
-		BufferedImage pieces = ImageLoader.loadImage("/images/chessPieces.png");
 		
 		int counter = 0;
 		for (int y = 0; y < BOARD_SIZE; y++) {
@@ -202,8 +214,16 @@ public class Game extends Canvas implements Runnable {
 				
 				g.fillRect(x * squareSize + offset.x, y * squareSize + offset.y, squareSize, squareSize);
 				
+				if (!allMoves.isEmpty()
+						&& (getLastMove().getStart().equals(new Location(x, y))
+						|| getLastMove().getDest().equals(new Location(x, y)))) {
+					//g.setColor(new Color(255, 241, 120, 150));
+					g.setColor(new Color(208, 219, 103, 200));
+					g.fillRect(x * squareSize + offset.x, y * squareSize + offset.y, squareSize, squareSize);
+				}
+				
 				boolean drawDot = false;
-				if (highlightedSquare != null && currentPossibleMoves.contains(createMoveFromHighlight(new Point(x, y)))) {
+				if (squareIsPossible(x, y)) {
 					drawDot = true;
 				}
 				
@@ -225,7 +245,7 @@ public class Game extends Canvas implements Runnable {
 				
 				int n = ChessGame.TT.getPieceNumberByChar(piece) % 6;
 				
-				BufferedImage pieceImg = ImageLoader.getSprite(pieces, n, h, pieces.getWidth() / 6, pieces.getHeight() / 2);
+				BufferedImage pieceImg = ImageLoader.getSprite(chessPieces, n, h, chessPieces.getWidth() / 6, chessPieces.getHeight() / 2);
 				
 				g.drawImage(pieceImg, x * squareSize + offset.x, y * squareSize + offset.y, squareSize, squareSize, null);
 				
@@ -240,10 +260,18 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 	
+	private boolean squareIsPossible(int x, int y) {
+		return highlightedSquare != null && currentPossibleMoves.contains(createMoveFromHighlight(new Point(x, y)));
+	}
+	
+	public Move getLastMove() {
+		return allMoves.get(allMoves.size() -1);
+	}
+	
 	public boolean isInsideBoard(int x, int y) {
 		Point boardOffset = getBoardOffset();
 		return x >= boardOffset.x && x < boardOffset.x + fullBoardSize
-				&& y >= boardOffset.y && x < boardOffset.y + fullBoardSize;
+				&& y >= boardOffset.y && y < boardOffset.y + fullBoardSize;
 	}
 	
 	public Point getSquare(int x, int y) {
@@ -290,5 +318,24 @@ public class Game extends Canvas implements Runnable {
 	public void setDepth(int depth) {
 		System.out.println("Depth set to: " + depth);
 		this.depth = depth;
+	}
+
+	public void hover(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		if (!isInsideBoard(x, y)) {
+			window.getFrame().getContentPane().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			return;
+		}
+		Point p = getSquare(x, y);
+		if (board.get(p.x, p.y) == ' ' && !squareIsPossible(p.x, p.y)) {
+			window.getFrame().getContentPane().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		} else {
+			window.getFrame().getContentPane().setCursor(new Cursor(Cursor.HAND_CURSOR));
+		}
+	}
+
+	public Board getBoard() {
+		return board;
 	}
 }

@@ -80,14 +80,14 @@ public class PossibleMoves {
 	}
 	
 	public static void addMoveIfKingSafe(Board board, Move move, PlayerColor colorTurn, ArrayList<Move> possibleMoves, MoveCategory category) {
-		/*if (!category.generateCapture() && move.isCapture()) {
+		if (!category.generateCapture() && move.isCapture()) {
 			return;
-		}*/
+		}
 		
 		if (category.isPseudoLegal() || testMoveKingSafety(board, move, colorTurn)) {
-			/*if (!category.generateCheck() && move.givesCheck()) {
+			if (!category.generateCheck() && move.givesCheck()) {
 				return;
-			}*/
+			}
 			
 			//possibleMoves.add(move);
 			addMoveMVV_LVA(possibleMoves, move);
@@ -113,5 +113,14 @@ public class PossibleMoves {
 		ArrayList<Move> possibleMoves = getPossibleMoves(board, LEGAL);
 		
 		return possibleMoves.contains(move);
+	}
+	
+	public static void printMoves(Board board) {
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
+		
+		for (Move move : moves) {
+			System.out.println(move);
+		}
+		System.out.println("");
 	}
 }

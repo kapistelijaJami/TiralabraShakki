@@ -12,7 +12,7 @@ import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
-public class AlphaBeta2 {
+public class AlphaBeta2 implements FindBestMoveInterface {
 	public int maxSearchDepth = 0;
 	
 	/**
@@ -21,6 +21,7 @@ public class AlphaBeta2 {
 	 * @param maxDepth Search depth
 	 * @return The best move
 	 */
+	@Override
 	public Move findBestMove(Board board, int maxDepth) {
 		long timeOrig = System.currentTimeMillis();
 		
@@ -199,7 +200,7 @@ public class AlphaBeta2 {
 			hashMove = data.getMove(board);
 			
 			if (data.valueIsKnown() /*&& data.flag == HashFlag.HASH_EXACT*/) { //these doesnt seem to do much, at least not in first move alone
-				return data.value;
+				//return data.value;
 			}
 		}
 		

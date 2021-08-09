@@ -34,25 +34,6 @@ public class Board {
 			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}};*/ //forced mate
 	
-	/*private char[][] board = 
-			{{'r', 'n', 'b', 'q', 'k', 'b', ' ', 'r'},
-			{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-			{' ', ' ', ' ', ' ', ' ', 'n', ' ', ' '},
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-			{' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-			{'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P'},
-			{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}};*/ //bug situation, bad move
-	/*private char[][] board = 
-			{{'r', 'n', 'b', ' ', 'k', 'b', 'n', 'r'},
-			{'p', 'p', 'p', ' ', 'p', 'p', 'p', 'p'},
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-			{' ', ' ', ' ', 'P', 'q', ' ', ' ', ' '},
-			{' ', ' ', 'N', ' ', ' ', ' ', ' ', ' '},
-			{'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P'},
-			{'R', ' ', 'B', 'Q', 'K', 'B', 'N', 'R'}};*/ //bug situation, wrong moves - fixed
-	
 	
 	private int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
 	private Location kingW;

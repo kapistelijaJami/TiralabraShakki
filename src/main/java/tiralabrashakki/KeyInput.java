@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import tiralabrashakki.possibleMoves.PossibleMoves;
 
 public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionListener {
 	private Game game;
@@ -16,6 +17,7 @@ public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionLi
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
+		
 		switch (key) {
 			case KeyEvent.VK_ESCAPE:
 				game.stop();
@@ -26,12 +28,23 @@ public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionLi
 			case KeyEvent.VK_SPACE:
 				game.printBestMove();
 				break;
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_BACK_SPACE:
+				game.undoMove();
+				break;
+			case KeyEvent.VK_P:
+				PossibleMoves.printMoves(game.getBoard());
+				break;
 		}
 		
 		if (key > KeyEvent.VK_0 && key <= KeyEvent.VK_9) {
 			int num = key - KeyEvent.VK_0;
 			game.setDepth(num);
+		} else if (key > KeyEvent.VK_NUMPAD0 && key <= KeyEvent.VK_NUMPAD9) {
+			int num = key - KeyEvent.VK_NUMPAD0;
+			game.setDepth(num);
 		}
+		
 	}
 	
 	@Override
@@ -75,6 +88,6 @@ public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionLi
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		//game.mouseMoved(e);
+		game.hover(e);
 	}
 }

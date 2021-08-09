@@ -112,9 +112,9 @@ public class SquareSafety {
 	}
 	
 	private static boolean isSafeFromPawn(Board board, int x, int y, PlayerColor colorTurn) { //TODO: does this need en passant? - probably not
-		int dir = -1;
+		int dir = 1;
 		if (colorTurn.isWhite()) {
-			dir = 1;
+			dir = -1;
 		}
 		
 		for (int i = -1; i < 2; i += 2) {

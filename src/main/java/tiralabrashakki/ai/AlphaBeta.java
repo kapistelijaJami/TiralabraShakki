@@ -12,7 +12,7 @@ import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
-public class AlphaBeta {
+public class AlphaBeta implements FindBestMoveInterface {
 	private int maxSearchDepth = 0;
 	
 	/**
@@ -21,6 +21,7 @@ public class AlphaBeta {
 	 * @param maxDepth Search depth
 	 * @return The best move
 	 */
+	@Override
 	public Move findBestMove(Board board, int maxDepth) {
 		long timeOrig = System.currentTimeMillis();
 		
@@ -88,7 +89,7 @@ public class AlphaBeta {
 	private MoveAndValue abMax(Board board, int depth, int alpha, int beta, boolean inCheck, int searchDepth) {
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
 		
-		TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
+		/*TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
 		Move hashMove = null;
 		if (data != null) {
 			hashMove = data.getMove(board);
@@ -96,17 +97,17 @@ public class AlphaBeta {
 			if (data.valueIsKnown()) {
 				return new MoveAndValue(null, data.value);
 			}
-		}
+		}*/
 		
 		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
-		if (hashMove != null) {
+		/*if (hashMove != null) {
 			sortHashMove(moves, hashMove);
-		}
+		}*/
 		
 		if (depth == 0 || moves.isEmpty()) {
 			MoveAndValue mv = new MoveAndValue(null, 0);
 			mv.setValue(Heuristics.evaluate(board, depth, inCheck, moves.size()));
-			ChessGame.TT.recordHash(board, null, mv.getValue(), depth, HashFlag.HASH_EXACT);
+			//ChessGame.TT.recordHash(board, null, mv.getValue(), depth, HashFlag.HASH_EXACT);
 			return mv;
 		}
 		
@@ -128,14 +129,14 @@ public class AlphaBeta {
 					alpha = val;
 					hashFlag = HashFlag.HASH_EXACT;
 					if (beta <= alpha) { //prune if alpha was greater than or equal to beta
-						ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, HashFlag.HASH_BETA);
+						//ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, HashFlag.HASH_BETA);
 						return bestMove;
 					}
 				}
 			}
 		}
 		
-		ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, hashFlag);
+		//ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, hashFlag);
 		
 		return bestMove; //should i return best move val or alpha? and if alpha, should i start best move with the alpha value? - IT DOESNT MATTER. - Only matters for transposition table, which I will keep as is, because fail soft should be better at pruning.
 	}
@@ -143,7 +144,7 @@ public class AlphaBeta {
 	private MoveAndValue abMin(Board board, int depth, int alpha, int beta, boolean inCheck, int searchDepth) {
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
 		
-		TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
+		/*TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
 		Move hashMove = null;
 		if (data != null) {
 			hashMove = data.getMove(board);
@@ -151,17 +152,17 @@ public class AlphaBeta {
 			if (data.valueIsKnown()) {
 				return new MoveAndValue(null, data.value);
 			}
-		}
+		}*/
 		
 		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
-		if (hashMove != null) {
+		/*if (hashMove != null) {
 			sortHashMove(moves, hashMove);
-		}
+		}*/
 		
 		if (depth == 0 || moves.isEmpty()) {
 			MoveAndValue mv = new MoveAndValue(null, 0);
 			mv.setValue(Heuristics.evaluate(board, depth, inCheck, moves.size()));
-			ChessGame.TT.recordHash(board, null, mv.getValue(), depth, HashFlag.HASH_EXACT);
+			//ChessGame.TT.recordHash(board, null, mv.getValue(), depth, HashFlag.HASH_EXACT);
 			return mv;
 		}
 		
@@ -183,14 +184,14 @@ public class AlphaBeta {
 					beta = val;
 					hashFlag = HashFlag.HASH_EXACT;
 					if (beta <= alpha) { //prune if alpha was greater than or equal to beta
-						ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, HashFlag.HASH_BETA);
+						//ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, HashFlag.HASH_BETA);
 						return bestMove;
 					}
 				}
 			}
 		}
 		
-		ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, hashFlag);
+		//ChessGame.TT.recordHash(board, bestMove.getMove(), bestMove.getValue(), depth, hashFlag);
 		
 		return bestMove;
 	}

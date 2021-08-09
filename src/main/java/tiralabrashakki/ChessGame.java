@@ -26,8 +26,9 @@ public class ChessGame {
 		/*AlphaBeta2 ab = new AlphaBeta2();
 		Board board = new Board();
 		printBoard(board);
+		PossibleMoves.printMoves(board);*/
 		
-		int depth = 8;
+		/*int depth = 8;
 		
 		Move move = ab.findBestMove(board, depth);
 		System.out.println(board.getTurnColor() + " played: " + move);*/
@@ -78,14 +79,5 @@ public class ChessGame {
 		}
 		
 		System.out.println("\n\n");
-	}
-	
-	public static void printMoves(Board board) {
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
-		
-		for (Move move : moves) {
-			System.out.println(move);
-		}
-		System.out.println("");
 	}
 }
