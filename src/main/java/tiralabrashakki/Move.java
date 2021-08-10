@@ -12,6 +12,8 @@ public class Move implements Comparable<Move> {
 	private Location erasedEnPassant = null;
 	private boolean isEnpassant = false;
 	private boolean isCastle = false;
+	private boolean isPromotion = false;
+	private char promotesTo;
 	
 	private Move(Location start, Location dest, char piece, char takes, boolean firstMoveForPiece) {
 		this.start = start;
@@ -22,29 +24,28 @@ public class Move implements Comparable<Move> {
 	}
 	
 	public static Move createMove(Board board, int startX, int startY, int destX, int destY) {
-		if (Character.toUpperCase(board.get(startX, startY)) == 'P' && board.get(destX, destY) == ' ' && startX != destX) {
-			return createMoveEnPassant(board, startX, startY, destX, destY);
-		} else if (Character.toUpperCase(board.get(startX, startY)) == 'K' && (startX - destX == 2 || destX - startX == 2)) {
-			return createMoveCastle(board, startX, startY, destX, destY);
+		Move baseMove = createBaseMove(board, startX, startY, destX, destY);
+		
+		if (Character.toUpperCase(baseMove.piece) == 'P'
+				&& board.get(destX, destY) == ' ' && startX != destX) {
+			
+			baseMove.isEnpassant = true;
+			baseMove.takes = board.get(destX, startY);
+		} else if (Character.toUpperCase(board.get(startX, startY)) == 'K'
+				&& (startX - destX == 2 || destX - startX == 2)) {
+			
+			baseMove.isCastle = true;
+		} else if (Character.toUpperCase(board.get(startX, startY)) == 'P'
+				&& (destY == 0 || destY == 7)) {
+			
+			baseMove.isPromotion = true;
 		}
-		return createBaseMove(board, startX, startY, destX, destY);
+		
+		return baseMove;
 	}
 	
 	private static Move createBaseMove(Board board, int startX, int startY, int destX, int destY) {
 		return new Move(new Location(startX, startY), new Location(destX, destY), board.get(startX, startY), board.get(destX, destY), !board.pieceHasMoved(startX, startY));
-	}
-	
-	private static Move createMoveEnPassant(Board board, int startX, int startY, int destX, int destY) {
-		Move move = createBaseMove(board, startX, startY, destX, destY);
-		move.isEnpassant = true;
-		move.takes = board.get(destX, startY);
-		return move;
-	}
-	
-	private static Move createMoveCastle(Board board, int startX, int startY, int destX, int destY) {
-		Move move = createBaseMove(board, startX, startY, destX, destY);
-		move.isCastle = true;
-		return move;
 	}
 	
 	public Location getStart() {
@@ -63,6 +64,10 @@ public class Move implements Comparable<Move> {
 		return takes;
 	}
 
+	/**
+	 * If the move gives a check. Only available after checking king safety.
+	 * @return 
+	 */
 	public boolean givesCheck() {
 		return givesCheck;
 	}
@@ -89,6 +94,18 @@ public class Move implements Comparable<Move> {
 
 	public boolean isCastle() {
 		return isCastle;
+	}
+	
+	public boolean isPromotion() {
+		return isPromotion;
+	}
+	
+	public char getPromotesTo() {
+		return promotesTo;
+	}
+	
+	public void setPromotesTo(char c) {
+		promotesTo = c;
 	}
 	
 	@Override
@@ -146,14 +163,14 @@ public class Move implements Comparable<Move> {
 	public int moveMaterialTradeValue() {
 		return Heuristics.pieceComparison(getTakes(), getPiece());
 	}
-
+	
 	@Override
 	public int compareTo(Move o) {
 		int captures = compareCaptures(o);
 		if (captures == 0 && isCapture()) {
-			int val1 = this.moveMaterialTradeValue();
-			int val2 = o.moveMaterialTradeValue();
-			return val2 - val1;
+			int myVal = this.moveMaterialTradeValue();
+			int otherVal = o.moveMaterialTradeValue();
+			return otherVal - myVal;
 		}
 		
 		return captures;

@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import tiralabrashakki.Board;
 import tiralabrashakki.Location;
 import tiralabrashakki.Move;
+import tiralabrashakki.ai.Minimax;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 
@@ -93,4 +94,18 @@ public class PossibleMovesTest {
 		
 		assertEquals(allPossibleMoves.length, moves.size());
 	}
+	
+	/*@Test
+	public void perftTest() {
+		Minimax minimax = new Minimax();
+		
+		assertEquals(824064, minimax.countLeafNodes(new Board("8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"), 6));
+		assertEquals(824064, minimax.countLeafNodes(new Board("8/8/1k6/8/2pP4/8/5BK1/8 b - d3 0 1"), 6));
+		
+		assertEquals(1440467, minimax.countLeafNodes(new Board("8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1"), 6));
+		assertEquals(1440467, minimax.countLeafNodes(new Board("8/5k2/8/2Pp4/2B5/1K6/8/8 w - d6 0 1"), 6));
+		
+		//assertEquals(661072, minimax.countLeafNodes(new Board("5k2/8/8/8/8/8/8/4K2R w K - 0 1"), 6)); //doesnt match
+		//assertEquals(661072, minimax.countLeafNodes(new Board("4k2r/8/8/8/8/8/8/5K2 b k - 0 1"), 6));
+	}*/
 }

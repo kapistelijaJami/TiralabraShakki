@@ -13,7 +13,10 @@ public class SquareSafety {
 	}
 	
 	public static boolean isSquareSafe(Board board, int x, int y, PlayerColor colorTurn) {
-		return isSafeFromStraight(board, x, y, colorTurn) && isSafeFromDiagonal(board, x, y, colorTurn) && isSafeFromKnight(board, x, y, colorTurn) && isSafeFromPawn(board, x, y, colorTurn);
+		return isSafeFromStraight(board, x, y, colorTurn)
+				&& isSafeFromDiagonal(board, x, y, colorTurn)
+				&& isSafeFromKnight(board, x, y, colorTurn)
+				&& isSafeFromPawn(board, x, y, colorTurn);
 	}
 	
 	private static boolean isSafeFromStraight(Board board, int x, int y, PlayerColor colorTurn) {
@@ -111,7 +114,7 @@ public class SquareSafety {
 		return true;
 	}
 	
-	private static boolean isSafeFromPawn(Board board, int x, int y, PlayerColor colorTurn) { //TODO: does this need en passant? - probably not
+	private static boolean isSafeFromPawn(Board board, int x, int y, PlayerColor colorTurn) {
 		int dir = 1;
 		if (colorTurn.isWhite()) {
 			dir = -1;

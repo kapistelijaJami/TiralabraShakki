@@ -188,7 +188,7 @@ public class AlphaBeta2 implements FindBestMoveInterface {
 	 */
 	private int quiescenceSearch(Board board, int depth, int alpha, int beta, boolean inCheck, int searchDepth) {
 		/*if (inCheck) { //not sure if this should be in or not
-			return negamax(board, 1, alpha, beta, inCheck, searchDepth); //TODO: this caused a loop, needs to add to detect a mate (what about stalemates?), could just send the possiblemoves number here
+			return negamax(board, 1, alpha, beta, inCheck, searchDepth); //TODO: this caused a loop, needs to add to detect a mate (what about stalemates?), could just send the possibleMoves number here
 		}*/
 		ChessGame.nodes++;
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
@@ -204,7 +204,7 @@ public class AlphaBeta2 implements FindBestMoveInterface {
 			}
 		}
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, CAPTURES); //TODO: change to only generating good captures, also add gives check moves, but see that it stops too
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, CAPTURES); //TODO: change to only generating good captures (maybe add "gives check" moves, but see that it doesnt cause infinite recursion)
 		
 		int standPat = Heuristics.evaluate(board, depth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
 		

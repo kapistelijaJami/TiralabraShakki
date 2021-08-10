@@ -16,7 +16,7 @@ public class PossibleMovesRook extends PossibleMoves {
 	 */
 	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves, MoveCategory category) {
 		PlayerColor colorTurn = PlayerColor.BLACK;
-		if (isWhite(board.get(x, y))) {
+		if (PlayerColor.pieceIsWhite(board.get(x, y))) {
 			colorTurn = PlayerColor.WHITE;
 		}
 		

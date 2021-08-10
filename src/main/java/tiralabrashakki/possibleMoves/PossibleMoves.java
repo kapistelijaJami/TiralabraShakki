@@ -50,10 +50,6 @@ public class PossibleMoves {
 		return possibleMoves;
 	}
 	
-	public static boolean isWhite(char c) {
-		return Character.isUpperCase(c);
-	}
-	
 	/**
 	 * Tests if after making the move, own king is not under attack. If this is true, the move is possible.
 	 * Also tests if enemy king is safe, if not, the move gives a check.

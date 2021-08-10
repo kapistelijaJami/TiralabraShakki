@@ -1,6 +1,9 @@
 package tiralabrashakki;
 
+import java.awt.Point;
 import static tiralabrashakki.Constants.BOARD_SIZE;
+import static tiralabrashakki.PlayerColor.BLACK;
+import static tiralabrashakki.PlayerColor.WHITE;
 
 public class Board {
 	private char[][] board =
@@ -43,10 +46,20 @@ public class Board {
 	private int nbrOfPliesPlayed = 0;
 	
 	public Board() {
-		this.pieceHasMoved = new int[BOARD_SIZE][BOARD_SIZE];
-		kingW = new Location(4, 7);
-		kingB = new Location(4, 0);
+		pieceHasMoved = new int[BOARD_SIZE][BOARD_SIZE];
+		findKings();
 		resetPieceHasMoved();
+		
+		generateHash();
+	}
+	
+	public Board(String FEN) {
+		resetBoard();
+		pieceHasMoved = new int[BOARD_SIZE][BOARD_SIZE];
+		resetPieceHasMoved(); //resets all to 1, except pawn starting rows.
+		readFen(FEN);
+		
+		findKings();
 		
 		generateHash();
 	}
@@ -129,7 +142,25 @@ public class Board {
 	private void resetPieceHasMoved() {
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
+				if (y == 1 || y == 6) {
+					pieceHasMoved[y][x] = 0; //pawn starting rows
+					continue;
+				}
 				pieceHasMoved[y][x] = (board[y][x] == ' ' ? 1 : 0);
+			}
+		}
+	}
+	
+	private void findKings() {
+		for (int y = 0; y < board.length; y++) {
+			for (int x = 0; x < board[0].length; x++) {
+				if (board[y][x] == 'K') {
+					kingW = new Location(x, y);
+				}
+				
+				if (board[y][x] == 'k') {
+					kingB = new Location(x, y);
+				}
 			}
 		}
 	}
@@ -137,8 +168,6 @@ public class Board {
 	public void makeMove(Move move) {
 		Location start = move.getStart();
 		Location dest = move.getDest();
-		
-		//TODO: promotion
 		
 		move.setErasedEnPassant(eraseEnPassantMarker());
 		
@@ -155,6 +184,8 @@ public class Board {
 			board[start.getY()][dest.getX()] = ' ';
 		} else if (move.isCastle()) {
 			makeCastle(start, dest);
+		} else if (move.isPromotion()) {
+			board[start.getY()][start.getX()] = move.getPromotesTo();
 		}
 		
 		movePiece(start, dest);
@@ -167,8 +198,6 @@ public class Board {
 		Location start = move.getStart();
 		Location dest = move.getDest();
 		
-		//TODO: promotion
-		
 		updateKingPosition(dest, start);
 		
 		//removes en passant marker if pawn double jumped
@@ -176,6 +205,10 @@ public class Board {
 			pieceHasMoved[start.getY() - 1][start.getX()] = 1;
 		} else if (move.getPiece() == 'p' && dest.getY() - start.getY() == 2) {
 			pieceHasMoved[start.getY() + 1][start.getX()] = 1;
+		}
+		
+		if (move.isPromotion()) {
+			board[dest.getY()][dest.getX()] = WHITE.isMyPiece(move.getPiece()) ? 'P' : 'p';
 		}
 		
 		if (move.isEnpassant()) {
@@ -235,6 +268,14 @@ public class Board {
 	
 	private void generateHash() {
 		currentHash = ChessGame.TT.generateHash(this);
+	}
+	
+	private void resetBoard() {
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
+				board[y][x] = ' ';
+			}
+		}
 	}
 	
 	private Location eraseEnPassantMarker() {
@@ -320,8 +361,67 @@ public class Board {
 		colorTurn = colorTurn.opposite();
 		nbrOfPliesPlayed--;
 	}
-	
-	/*public Board copy() {
+
+	private void readFen(String FEN) {
+		String[] rows = FEN.split("[/ ]");
 		
-	}*/
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			int x = 0;
+			for (int i = 0; i < rows[y].length(); i++) {
+				char c = rows[y].charAt(i);
+				if (Character.isDigit(c)) {
+					for (int j = 0; j < c - '0'; j++) {
+						board[y][x] = ' ';
+						x++;
+					}
+				} else {
+					board[y][x] = c;
+					x++;
+				}
+			}
+		}
+		
+		colorTurn = rows[8].charAt(0) == 'w' ? WHITE : BLACK;
+		String castlingRights = rows[9];
+		readFENCastlingRights(castlingRights);
+		
+		String enPassantSquare = rows[10];
+		if (enPassantSquare.charAt(0) != '-') {
+			Point p = squareToPoint(enPassantSquare);
+			pieceHasMoved[p.y][p.x] = 2;
+		}
+		
+		if (rows.length == 12) {
+			nbrOfPliesPlayed = (Integer.parseInt(rows[11]) - 1) * 2 + (colorTurn == BLACK ? 1 : 0);
+		}
+	}
+	
+	private void readFENCastlingRights(String rights) {
+		if (rights.charAt(0) == '-') {
+			return;
+		}
+		for (int i = 0; i < rights.length(); i++) {
+			char c = rights.charAt(i);
+			
+			int y = 0;
+			if (PlayerColor.pieceIsWhite(c)) {
+				y = 7;
+			}
+			
+			if (Character.toUpperCase(c) == 'K') {
+				pieceHasMoved[y][4] = 0;
+				pieceHasMoved[y][7] = 0;
+			} else {
+				pieceHasMoved[y][4] = 0;
+				pieceHasMoved[y][0] = 0;
+			}
+		}
+	}
+	
+	private static Point squareToPoint(String sqr) {
+		int x = sqr.charAt(0) - 'a';
+		int y = 8 - (sqr.charAt(1) - '0');
+		
+		return new Point(x, y);
+	}
 }

@@ -5,11 +5,11 @@ import tiralabrashakki.Board;
 import tiralabrashakki.Move;
 import tiralabrashakki.PlayerColor;
 
-public class PossibleMovesPawn extends PossibleMoves { //TODO: promotion
+public class PossibleMovesPawn extends PossibleMoves {
 	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves, MoveCategory category) {
 		PlayerColor colorTurn = PlayerColor.BLACK;
 		int dir = 1;
-		if (isWhite(board.get(x, y))) {
+		if (PlayerColor.pieceIsWhite(board.get(x, y))) {
 			dir = -1;
 			colorTurn = PlayerColor.WHITE;
 		}
@@ -22,7 +22,18 @@ public class PossibleMovesPawn extends PossibleMoves { //TODO: promotion
 	
 	private static void checkMove(Board board, ArrayList<Move> possibleMoves, int x, int y, int dir, PlayerColor colorTurn, MoveCategory category) {
 		if (board.isInside(y + dir) && board.get(x, y + dir) == ' ') {
-			addMoveIfKingSafe(board, Move.createMove(board, x, y, x, y + dir), colorTurn, possibleMoves, category);
+			
+			if (y + dir == 0 || y + dir == 7) {
+				for (int i = 0; i < 4; i++) {
+					Move move = Move.createMove(board, x, y, x, y + dir);
+					char c = getPromotionOption(i);
+					
+					move.setPromotesTo(colorTurn.isWhite() ? Character.toUpperCase(c) : c);
+					addMoveIfKingSafe(board, move, colorTurn, possibleMoves, category);
+				}
+			} else {
+				addMoveIfKingSafe(board, Move.createMove(board, x, y, x, y + dir), colorTurn, possibleMoves, category);
+			}
 			
 			if (board.isInside(y + dir * 2) && board.get(x, y + dir * 2) == ' ' && !board.pieceHasMoved(x, y)) {
 				addMoveIfKingSafe(board, Move.createMove(board, x, y, x, y + dir * 2), colorTurn, possibleMoves, category);
@@ -39,7 +50,17 @@ public class PossibleMovesPawn extends PossibleMoves { //TODO: promotion
 			char c = board.get(x + i, y + dir);
 			if (c != ' ') {
 				if (colorTurn.isEnemyPiece(c)) {
-					addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y + dir), colorTurn, possibleMoves, category);
+					if (y + dir == 0 || y + dir == 7) {
+						for (int j = 0; j < 4; j++) {
+							Move move = Move.createMove(board, x, y, x + i, y + dir);
+							char promotesTo = getPromotionOption(j);
+
+							move.setPromotesTo(colorTurn.isWhite() ? Character.toUpperCase(promotesTo) : promotesTo);
+							addMoveIfKingSafe(board, move, colorTurn, possibleMoves, category);
+						}
+					} else {
+						addMoveIfKingSafe(board, Move.createMove(board, x, y, x + i, y + dir), colorTurn, possibleMoves, category);
+					}
 				}
 			} else { //en passant
 				c = board.get(x + i, y); //next to start square
@@ -48,5 +69,19 @@ public class PossibleMovesPawn extends PossibleMoves { //TODO: promotion
 				}
 			}
 		}
+	}
+	
+	private static char getPromotionOption(int i) {
+		switch (i) {
+			case 0:
+				return 'q';
+			case 1:
+				return 'n';
+			case 2:
+				return 'b';
+			case 3:
+				return 'r';
+		}
+		return 'q';
 	}
 }

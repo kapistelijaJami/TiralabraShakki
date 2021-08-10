@@ -12,7 +12,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import static tiralabrashakki.Constants.BOARD_SIZE;
 import tiralabrashakki.ai.AlphaBeta2;
+import tiralabrashakki.ai.FindBestMoveInterface;
 import tiralabrashakki.ai.FindBestMoveThread;
+import tiralabrashakki.ai.Minimax;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 
@@ -26,7 +28,7 @@ public class Game extends Canvas implements Runnable {
 	private final Window window;
 	
 	private final Board board;
-	private final AlphaBeta2 alphabeta;
+	private final FindBestMoveInterface alphabeta;
 	
 	private int fullBoardSize;
 	private int squareSize;
@@ -40,8 +42,9 @@ public class Game extends Canvas implements Runnable {
 	private final BufferedImage chessPieces;
 	
 	public Game() {
-		window = new Window(Constants.WIDTH, Constants.HEIGHT, "Drill and Defend", this);
+		window = new Window(Constants.WIDTH, Constants.HEIGHT, "Chess Game", this);
 		alphabeta = new AlphaBeta2();
+		//alphabeta = new Minimax();
 		board = new Board();
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		
@@ -242,6 +245,7 @@ public class Game extends Canvas implements Runnable {
 				if (PlayerColor.BLACK.isMyPiece(piece)) {
 					h = 1;
 				}
+				//System.out.println("h: " + h);
 				
 				int n = ChessGame.TT.getPieceNumberByChar(piece) % 6;
 				
@@ -258,6 +262,7 @@ public class Game extends Canvas implements Runnable {
 			}
 			counter--;
 		}
+		
 	}
 	
 	private boolean squareIsPossible(int x, int y) {

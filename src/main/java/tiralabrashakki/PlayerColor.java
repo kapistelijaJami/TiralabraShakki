@@ -26,6 +26,10 @@ public enum PlayerColor {
 	}
 	
 	public static boolean turnEqualsPieceColor(boolean whiteTurn, char piece) {
-		return whiteTurn == PossibleMoves.isWhite(piece);
+		return whiteTurn == pieceIsWhite(piece);
+	}
+	
+	public static boolean pieceIsWhite(char c) {
+		return Character.isUpperCase(c);
 	}
 }

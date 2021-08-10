@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import tiralabrashakki.Board;
 import tiralabrashakki.Move;
 import tiralabrashakki.PlayerColor;
-import static tiralabrashakki.possibleMoves.PossibleMoves.isWhite;
 
 public class PossibleMovesBishop extends PossibleMoves {
 	public static void addPossibleMoves(Board board, int x, int y, ArrayList<Move> possibleMoves, MoveCategory category) {
 		PlayerColor colorTurn = PlayerColor.BLACK;
-		if (isWhite(board.get(x, y))) {
+		if (PlayerColor.pieceIsWhite(board.get(x, y))) {
 			colorTurn = PlayerColor.WHITE;
 		}
 		
