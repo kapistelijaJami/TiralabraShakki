@@ -11,10 +11,10 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import static tiralabrashakki.Constants.BOARD_SIZE;
-import tiralabrashakki.ai.AlphaBeta2;
+import tiralabrashakki.ai.AlphaBeta;
 import tiralabrashakki.ai.FindBestMoveInterface;
 import tiralabrashakki.ai.FindBestMoveThread;
-import tiralabrashakki.ai.Minimax;
+import tiralabrashakki.ai.Perft;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 
@@ -43,7 +43,7 @@ public class Game extends Canvas implements Runnable {
 	
 	public Game() {
 		window = new Window(Constants.WIDTH, Constants.HEIGHT, "Chess Game", this);
-		alphabeta = new AlphaBeta2();
+		alphabeta = new AlphaBeta();
 		//alphabeta = new Minimax();
 		board = new Board();
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);

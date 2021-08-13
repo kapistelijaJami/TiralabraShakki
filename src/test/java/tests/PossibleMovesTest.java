@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import tiralabrashakki.Board;
 import tiralabrashakki.Location;
 import tiralabrashakki.Move;
-import tiralabrashakki.ai.Minimax;
+import tiralabrashakki.ai.Perft;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 

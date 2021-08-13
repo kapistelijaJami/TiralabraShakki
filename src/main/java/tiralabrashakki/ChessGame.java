@@ -2,9 +2,8 @@ package tiralabrashakki;
 
 import java.util.ArrayList;
 import tiralabrashakki.ai.AlphaBeta;
-import tiralabrashakki.ai.AlphaBeta2;
 import tiralabrashakki.ai.HashFlag;
-import tiralabrashakki.ai.Minimax;
+import tiralabrashakki.ai.Perft;
 import tiralabrashakki.ai.TranspositionData;
 import tiralabrashakki.ai.TranspositionTable;
 import tiralabrashakki.possibleMoves.MoveCategory;
@@ -15,48 +14,26 @@ import tiralabrashakki.possibleMoves.SquareSafety;
 public class ChessGame {
 	public static final TranspositionTable TT = new TranspositionTable();
 	public static final boolean ASPIRATION_WINDOW = true;
-	public static boolean TRANSPOSITION_TABLE = true;
-	public static final boolean ALPHABETA_PRUNING = true;
 	
 	public static long nodes = 0;
 	
 	public static void main(String[] args) {
-		/*Game game = new Game();
+		Game game = new Game();
 		game.start();
-		*/
-		Minimax minimax = new Minimax();
+		
+		
+		//move generation tests
+		/*Perft perft = new Perft();
 		Board board = new Board();
 		
 		int depth = 6;
 		long time = System.currentTimeMillis();
 		for (int i = 1; i <= depth; i++) {
-			minimax.dividePerft(board, i);
+			perft.dividePerft(board, i);
 			System.out.println("");
 		}
-		System.out.println("total: " + minimax.perft(board, depth));
-		System.out.println(System.currentTimeMillis() - time);
-		/*for (int i = 1; i <= 6; i++) {
-			System.out.println("Depth " + i + ": " + minimax.perft(board, i));
-		}*/
-		
-		/*AlphaBeta2 ab = new AlphaBeta2();
-		Board board = new Board();
-		printBoard(board);
-		PossibleMoves.printMoves(board);*/
-		
-		/*int depth = 8;
-		
-		Move move = ab.findBestMove(board, depth);
-		System.out.println(board.getTurnColor() + " played: " + move);*/
-		
-		
-		/*while (!PossibleMoves.getPossibleMoves(board).isEmpty()) {
-			Move move = ab.findBestMove(board, depth);
-			System.out.println("Move " + board.getNbrOfPliesPlayed() + ": " + board.getTurnColor() + " played: " + move);
-			System.out.println();
-			board.makeMove(move);
-			printBoard(board);
-		}*/
+		System.out.println("total: " + perft.doPerft(board, depth));
+		System.out.println(System.currentTimeMillis() - time);*/
 	}
 	
 	public static void printBoard(Board board) {

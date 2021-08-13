@@ -9,7 +9,7 @@ import static tiralabrashakki.possibleMoves.MoveCategory.PSEUDO_LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
-public class Minimax implements FindBestMoveInterface {
+public class Perft implements FindBestMoveInterface {
 	private int leafNodes = 0;
 	private int checks = 0;
 	private int captures = 0;
@@ -39,7 +39,7 @@ public class Minimax implements FindBestMoveInterface {
 		return leafNodes;
 	}
 	
-	public int perft(Board board, int depth) {
+	public int doPerft(Board board, int depth) {
 		if (depth == 0) {
 			return 1;
 		}
@@ -53,7 +53,7 @@ public class Minimax implements FindBestMoveInterface {
 				board.unmakeMove(move);
 				continue;
 			}
-			nodes += perft(board, depth - 1);
+			nodes += doPerft(board, depth - 1);
 			board.unmakeMove(move);
 		}
 		return nodes;
@@ -68,7 +68,7 @@ public class Minimax implements FindBestMoveInterface {
 				board.unmakeMove(move);
 				continue;
 			}
-			int res = perft(board, depth - 1);
+			int res = doPerft(board, depth - 1);
 			total += res;
 			System.out.println(move + " \t" + res);
 			board.unmakeMove(move);
