@@ -39,6 +39,7 @@ public class Move implements Comparable<Move> {
 				&& (destY == 0 || destY == 7)) {
 			
 			baseMove.isPromotion = true;
+			baseMove.promotesTo = destY == 0 ? 'Q' : 'q';
 		}
 		
 		return baseMove;
@@ -140,15 +141,16 @@ public class Move implements Comparable<Move> {
 		if (takes != ' ') {
 			ifTakes = " takes: " + takes;
 		}
-		return (char)(start.getX() + 'a') + "" + (8 - start.getY()) + " -> " + (char)(dest.getX() + 'a') + "" + (8 - dest.getY()) + ifTakes;
+		String p = (Character.toUpperCase(piece) == 'P' && takes == ' ' ? "" : "" + piece);
+		String move = p + (takes != ' ' ? 'x' : "") + (char)(dest.getX() + 'a') + "" + (8 - dest.getY());
+		String coordinates = " (" + (char)(start.getX() + 'a') + "" + (8 - start.getY()) + " -> " + (char)(dest.getX() + 'a') + "" + (8 - dest.getY()) + ifTakes + ")";
+		
+		//return (char)(start.getX() + 'a') + "" + (8 - start.getY()) + " -> " + (char)(dest.getX() + 'a') + "" + (8 - dest.getY()) + ifTakes;
+		return move + coordinates;
 	}
 
 	public boolean isCapture() {
 		return takes != ' ';
-	}
-
-	public boolean isQuiet() {
-		return !isCapture() && !givesCheck();
 	}
 	
 	private int compareCaptures(Move o) {

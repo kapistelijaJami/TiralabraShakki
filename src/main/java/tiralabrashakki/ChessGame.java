@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import tiralabrashakki.ai.AlphaBeta;
 import tiralabrashakki.ai.AlphaBeta2;
 import tiralabrashakki.ai.HashFlag;
+import tiralabrashakki.ai.Minimax;
 import tiralabrashakki.ai.TranspositionData;
 import tiralabrashakki.ai.TranspositionTable;
 import tiralabrashakki.possibleMoves.MoveCategory;
@@ -20,8 +21,23 @@ public class ChessGame {
 	public static long nodes = 0;
 	
 	public static void main(String[] args) {
-		Game game = new Game();
+		/*Game game = new Game();
 		game.start();
+		*/
+		Minimax minimax = new Minimax();
+		Board board = new Board();
+		
+		int depth = 6;
+		long time = System.currentTimeMillis();
+		for (int i = 1; i <= depth; i++) {
+			minimax.dividePerft(board, i);
+			System.out.println("");
+		}
+		System.out.println("total: " + minimax.perft(board, depth));
+		System.out.println(System.currentTimeMillis() - time);
+		/*for (int i = 1; i <= 6; i++) {
+			System.out.println("Depth " + i + ": " + minimax.perft(board, i));
+		}*/
 		
 		/*AlphaBeta2 ab = new AlphaBeta2();
 		Board board = new Board();

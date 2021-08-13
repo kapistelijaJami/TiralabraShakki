@@ -34,7 +34,7 @@ public class Window {
 		frame.setMaximumSize(new Dimension(width, height));
 		
 		//frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //window closes with X
-		frame.setResizable(false);								//cant be stretched
+		frame.setResizable(true);								//cant be stretched
 		frame.setLocationRelativeTo(null);						//window spawns in the middle of the screen
 		frame.add(game);										//add game to the frame
 		frame.pack();											//makes the window fit the preferred size

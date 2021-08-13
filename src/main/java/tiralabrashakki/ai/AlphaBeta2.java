@@ -7,8 +7,10 @@ import tiralabrashakki.Constants;
 import static tiralabrashakki.Constants.PAWN_VAL;
 import static tiralabrashakki.Constants.QUEEN_VAL;
 import tiralabrashakki.Move;
+import tiralabrashakki.possibleMoves.MoveCategory;
 import static tiralabrashakki.possibleMoves.MoveCategory.CAPTURES;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
+import static tiralabrashakki.possibleMoves.MoveCategory.PSEUDO_LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
@@ -135,11 +137,16 @@ public class AlphaBeta2 implements FindBestMoveInterface {
 		HashFlag hashFlag = HashFlag.HASH_ALPHA;
 		MoveAndValue bestMove = new MoveAndValue(null, Integer.MIN_VALUE);
 		boolean foundPV = false;
-		int lateMoveReduction = 0;
+		
 		
 		for (int i = 0; i < moves.size(); i++) {
 			Move move = moves.get(i);
 			board.makeMove(move);
+			
+			int lateMoveReduction = 0;
+			if (i >= 4) {
+				
+			}
 			
 			if (foundPV) {
 				val = -negamax(board, depth - 1 - lateMoveReduction, -(alpha + 1), -alpha, move.givesCheck(), searchDepth + 1); //principal variation search with null window
@@ -156,7 +163,7 @@ public class AlphaBeta2 implements FindBestMoveInterface {
 				bestMove.setValue(val);
 			}
 			
-			if (val >= beta) { //prune if alpha was greater than or equal to beta
+			if (val >= beta) { //prune if val was greater than or equal to beta
 				ChessGame.TT.recordHash(board, move, beta, depth, HashFlag.HASH_BETA);
 				if (ChessGame.ALPHABETA_PRUNING) {
 					return beta;

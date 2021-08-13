@@ -72,6 +72,7 @@ public class Game extends Canvas implements Runnable {
 		this.addMouseListener(input);
 		this.addKeyListener(input);
 		this.addMouseMotionListener(input);
+		this.addComponentListener(input);
 		
 		setBoardSizes();
 	}
@@ -245,7 +246,6 @@ public class Game extends Canvas implements Runnable {
 				if (PlayerColor.BLACK.isMyPiece(piece)) {
 					h = 1;
 				}
-				//System.out.println("h: " + h);
 				
 				int n = ChessGame.TT.getPieceNumberByChar(piece) % 6;
 				
@@ -342,5 +342,10 @@ public class Game extends Canvas implements Runnable {
 
 	public Board getBoard() {
 		return board;
+	}
+	
+	public void windowResized(int w, int h) {
+		WIDTH = w;
+		HEIGHT = h;
 	}
 }

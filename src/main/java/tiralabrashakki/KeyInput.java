@@ -1,5 +1,7 @@
 package tiralabrashakki;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -7,7 +9,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 
-public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionListener {
+public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionListener, ComponentListener {
 	private Game game;
 	
 	public KeyInput(Game game) {
@@ -89,5 +91,27 @@ public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionLi
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		game.hover(e);
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		int w = e.getComponent().getWidth();
+		int h = e.getComponent().getHeight();
+		game.windowResized(w, h);
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		
 	}
 }

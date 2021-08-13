@@ -3,7 +3,9 @@ package tiralabrashakki.ai;
 import java.util.ArrayList;
 import tiralabrashakki.Board;
 import tiralabrashakki.Move;
+import tiralabrashakki.possibleMoves.MoveCategory;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
+import static tiralabrashakki.possibleMoves.MoveCategory.PSEUDO_LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
@@ -35,6 +37,44 @@ public class Minimax implements FindBestMoveInterface {
 		MoveAndValue mv = negamax(board, depth, SquareSafety.isKingSafe(board, board.getTurnColor()), false);
 		printDepth(depth, board, mv);
 		return leafNodes;
+	}
+	
+	public int perft(Board board, int depth) {
+		if (depth == 0) {
+			return 1;
+		}
+		int nodes = 0;
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, PSEUDO_LEGAL);
+		
+		for (int i = 0; i < moves.size(); i++) {
+			Move move = moves.get(i);
+			board.makeMove(move);
+			if (!SquareSafety.isKingSafe(board, board.getTurnColor().opposite())) {
+				board.unmakeMove(move);
+				continue;
+			}
+			nodes += perft(board, depth - 1);
+			board.unmakeMove(move);
+		}
+		return nodes;
+	}
+	
+	public void dividePerft(Board board, int depth) {
+		int total = 0;
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, PSEUDO_LEGAL);
+		for (Move move : moves) {
+			board.makeMove(move);
+			if (!SquareSafety.isKingSafe(board, board.getTurnColor().opposite())) {
+				board.unmakeMove(move);
+				continue;
+			}
+			int res = perft(board, depth - 1);
+			total += res;
+			System.out.println(move + " \t" + res);
+			board.unmakeMove(move);
+		}
+		
+		System.out.println("Total: " + total);
 	}
 
 	private MoveAndValue negamax(Board board, int depth, boolean inCheck, boolean captured) {

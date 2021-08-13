@@ -90,6 +90,13 @@ public class PossibleMoves {
 		}
 	}
 	
+	/**
+	 * Inserts move in the list with comparing moves with their compareTo method.
+	 * Captures are inserted first, and between captures it uses MVV-LVA
+	 * (Most Valuable Victim - Least Valuable Attacker)
+	 * @param possibleMoves
+	 * @param move 
+	 */
 	private static void addMoveMVV_LVA(ArrayList<Move> possibleMoves, Move move) { //TODO: add killer move ordering, and maybe hashMove here as well
 		if (move.isCapture()) {
 			for (int i = 0; i < possibleMoves.size(); i++) {
@@ -118,5 +125,17 @@ public class PossibleMoves {
 			System.out.println(move);
 		}
 		System.out.println("");
+	}
+	
+	public static int howManyAreLegal(Board board, ArrayList<Move> pseudoLegal) {
+		int counter = 0;
+		for (int i = 0; i < pseudoLegal.size(); i++) {
+			Move move = pseudoLegal.get(i);
+			
+			if (testMoveKingSafety(board, move, board.getTurnColor())) {
+				counter++;
+			}
+		}
+		return counter;
 	}
 }
