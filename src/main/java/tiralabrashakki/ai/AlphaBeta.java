@@ -14,7 +14,7 @@ import static tiralabrashakki.possibleMoves.MoveCategory.PSEUDO_LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
-public class AlphaBeta implements FindBestMoveInterface {
+public class AlphaBeta implements FindBestMoveI {
 	public int maxSearchDepth = 0;
 	
 	/**
@@ -83,6 +83,18 @@ public class AlphaBeta implements FindBestMoveInterface {
 		return ChessGame.TT.probe(board, 0, alpha, beta).getMove(board);
 	}
 	
+	/**
+	 * Main search algorithm.
+	 * Searches all the moves of the node. Uses alpha-beta pruning and other ways of speeding up the search.
+	 * Evaluates from the perspective of the node, always negating the result to other player pov during recursion.
+	 * @param board
+	 * @param depth
+	 * @param alpha
+	 * @param beta
+	 * @param inCheck
+	 * @param searchDepth
+	 * @return 
+	 */
 	private int negamax(Board board, int depth, int alpha, int beta, boolean inCheck, int searchDepth) {
 		ChessGame.nodes++;
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
@@ -176,7 +188,7 @@ public class AlphaBeta implements FindBestMoveInterface {
 	
 	
 	/**
-	 * Searches like negamax, but only good captures, and returns the
+	 * Searches like {@link #negamax(Board, int, int, int, boolean, int) negamax}, but only good captures, and returns the
 	 * evaluation when the situation is quiet in order to reduce the horizon effect.
 	 * @param board
 	 * @param depth
@@ -193,7 +205,7 @@ public class AlphaBeta implements FindBestMoveInterface {
 		ChessGame.nodes++;
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
 		
-		//TODO: add TT probe
+		//TT probe
 		TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
 		Move hashMove = null;
 		if (data != null) {
@@ -224,6 +236,7 @@ public class AlphaBeta implements FindBestMoveInterface {
 			sortHashMove(moves, hashMove);
 		}
 		
+		//Searches all the captures where material gained is at least 0. (No need to check QxP etc)
 		for (int i = 0; i < moves.size(); i++) {
 			Move move = moves.get(i);
 			if (/*!move.givesCheck() && */!move.isCapture()) { //move is not a capture
@@ -231,7 +244,7 @@ public class AlphaBeta implements FindBestMoveInterface {
 			}
 			
 			//if capturing loses material, skip
-			if (move.moveMaterialTradeValue() < 0) { //this seems to slow down the search
+			if (move.moveMaterialTradeValue() < 0) {
 				continue;
 			}
 			
@@ -246,7 +259,7 @@ public class AlphaBeta implements FindBestMoveInterface {
 			//TODO: add SEE
 			
 			board.makeMove(move);
-			int val = -quiescenceSearch(board, depth - 1, -beta, -alpha, move.givesCheck(), searchDepth + 1);
+			int val = -quiescenceSearch(board, depth - 1, -beta, -alpha, move.givesCheck(), searchDepth + 1); //main search
 			board.unmakeMove(move);
 			
 			if (val >= beta) { //beta cutoff
@@ -260,6 +273,11 @@ public class AlphaBeta implements FindBestMoveInterface {
 		return alpha;
 	}
 	
+	/**
+	 * Puts the hash move to first in order to increase branch pruning.
+	 * @param moves
+	 * @param hashMove 
+	 */
 	private void sortHashMove(ArrayList<Move> moves, Move hashMove) {
 		for (int i = 0; i < moves.size(); i++) {
 			Move move = moves.get(i);

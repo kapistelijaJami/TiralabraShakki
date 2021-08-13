@@ -12,11 +12,11 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import static tiralabrashakki.Constants.BOARD_SIZE;
 import tiralabrashakki.ai.AlphaBeta;
-import tiralabrashakki.ai.FindBestMoveInterface;
 import tiralabrashakki.ai.FindBestMoveThread;
 import tiralabrashakki.ai.Perft;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
+import tiralabrashakki.ai.FindBestMoveI;
 
 public class Game extends Canvas implements Runnable {
 	public static int WIDTH;
@@ -28,7 +28,7 @@ public class Game extends Canvas implements Runnable {
 	private final Window window;
 	
 	private final Board board;
-	private final FindBestMoveInterface alphabeta;
+	private final FindBestMoveI alphabeta;
 	
 	private int fullBoardSize;
 	private int squareSize;
@@ -77,7 +77,7 @@ public class Game extends Canvas implements Runnable {
 		setBoardSizes();
 	}
 	
-	public void setBoardSizes() {
+	private void setBoardSizes() {
 		int margin = 20;
 		fullBoardSize = Math.min(WIDTH - margin * 2, HEIGHT - margin * 2);
 		squareSize = fullBoardSize / BOARD_SIZE;
@@ -127,7 +127,7 @@ public class Game extends Canvas implements Runnable {
 		new FindBestMoveThread(board, depth, alphabeta, this::keepMakingMoves).start();
 	}
 	
-	public void printMove(Move move) {
+	private void printMove(Move move) {
 		System.out.println("Move was: " + move);
 		isThinking = false;
 	}
@@ -145,7 +145,7 @@ public class Game extends Canvas implements Runnable {
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 	}
 	
-	public void keepMakingMoves(Move move) {
+	private void keepMakingMoves(Move move) {
 		makeMove(move);
 		
 		try {

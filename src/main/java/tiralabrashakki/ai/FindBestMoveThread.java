@@ -7,10 +7,10 @@ import tiralabrashakki.Move;
 public class FindBestMoveThread implements Runnable {
 	private final int depth;
 	private final Board board;
-	private final FindBestMoveInterface alphabeta;
+	private final FindBestMoveI alphabeta;
 	private final Consumer<Move> makeMoveFunction;
 	
-	public FindBestMoveThread(Board board, int depth, FindBestMoveInterface alphabeta, Consumer<Move> makeMoveFunction) {
+	public FindBestMoveThread(Board board, int depth, FindBestMoveI alphabeta, Consumer<Move> makeMoveFunction) {
 		this.board = board.copy();
 		this.depth = depth;
 		this.alphabeta = alphabeta;

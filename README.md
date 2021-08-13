@@ -2,7 +2,7 @@
 
 **Käyttöhjeet**
 
-Ohjelmassa on käyttöliittymä, jolla pystyy pelaamaan joko yksikseen, tai enteriä painamalla algoritmi tekee siirron sille, jonka vuoro on siirtää. Spacea painamalla konsoliin tulee tulostus algoritmin sanovasta parhaasta siirrosta, mutta sitä ei kuitenkaan automaattisesti suoriteta laudalla. Syvyyttä voi muuttaa numeronäppäimillä (1 - 9, oletus on nyt 6), ja takaisin pääsee siirroissa nuolella vasemmalle.
+Ohjelmassa on käyttöliittymä, jolla pystyy pelaamaan joko yksikseen, tai enteriä painamalla algoritmi tekee siirron sille, jonka vuoro on siirtää. Spacea painamalla konsoliin tulee tulostus algoritmin sanovasta parhaasta siirrosta, mutta sitä ei kuitenkaan automaattisesti suoriteta laudalla. Syvyyttä voi muuttaa numeronäppäimillä (1 - 9, oletus on nyt 6, mutta esim 7 siirtää muutamassa sekunnissa), ja takaisin pääsee siirroissa nuolella vasemmalle.
 
 **Linkit**
 * [Määrittelydokumentti](Dokumentaatio/Määrittelydokumentti.md)

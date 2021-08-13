@@ -9,7 +9,7 @@ import static tiralabrashakki.possibleMoves.MoveCategory.PSEUDO_LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
-public class Perft implements FindBestMoveInterface {
+public class Perft implements FindBestMoveI {
 	private int leafNodes = 0;
 	private int checks = 0;
 	private int captures = 0;
