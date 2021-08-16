@@ -29,7 +29,6 @@ public class FindBestMoveWorker implements Runnable {
 	}
 	
 	public void cancel() {
-		System.out.println("canceled");
 		canceled = true;
 		alphabeta.setTimedOut(true);
 	}
@@ -47,7 +46,6 @@ public class FindBestMoveWorker implements Runnable {
 		running = true;
 		
 		Move move = alphabeta.findBestMove(board, depth, ponder);
-		System.out.println("returned from algo"); //TODO: remove these prints and from Game.java
 		running = false;
 		if (canceled) {
 			return;

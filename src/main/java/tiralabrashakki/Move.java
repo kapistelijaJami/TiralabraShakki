@@ -137,16 +137,12 @@ public class Move implements Comparable<Move> {
 	
 	@Override
 	public String toString() {
-		String ifTakes = "";
-		if (takes != ' ') {
-			ifTakes = " takes: " + takes;
-		}
 		String p = (Character.toUpperCase(piece) == 'P' && takes == ' ' ? "" : "" + piece);
-		String move = p + (takes != ' ' ? 'x' : "") + (char)(dest.getX() + 'a') + "" + (8 - dest.getY());
+		String move = p + (takes == ' ' ? "" : "x") + (char)(dest.getX() + 'a') + "" + (8 - dest.getY());
 		
 		return move;
 	}
-
+	
 	public boolean isCapture() {
 		return takes != ' ';
 	}

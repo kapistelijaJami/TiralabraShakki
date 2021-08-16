@@ -343,7 +343,6 @@ public class Game extends Canvas implements Runnable {
 
 	public void stopThinking() {
 		if (currentMoveThread != null) {
-			System.out.println("STOPPED");
 			currentMoveThread.cancel();
 		}
 	}
@@ -362,7 +361,7 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	public void bestMoveResult(Move move) {
-		printMove("Best move was: ",move);
+		printMove("Best move was: ", move);
 		makeMove(move);
 		
 		if (isThinking == 1) {
@@ -376,8 +375,7 @@ public class Game extends Canvas implements Runnable {
 		if (undoing) return;
 		
 		board.makeMove(move);
-		System.out.println("MOVED: " + move);
-		System.out.println();
+		printMove("MOVED: ", move);
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		allMoves.add(move);
 	}
@@ -405,6 +403,9 @@ public class Game extends Canvas implements Runnable {
 		if (isThinking == 2) {
 			cancelPonder();
 		}
+		
+		System.out.println();
+		System.out.println("THINKING...");
 		isThinking = 1;
 		
 		while (currentMoveThread != null && currentMoveThread.running) {
