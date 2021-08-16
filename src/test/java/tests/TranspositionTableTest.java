@@ -55,4 +55,15 @@ public class TranspositionTableTest {
 		board.makeMove(move);
 		assertEquals(hash2, ChessGame.TT.generateHash(board));
 	}
+	
+	@Test
+	public void updateHashTest() {
+		Board board = new Board();
+		
+		board.makeMove(Move.createMove(board, 4, 6, 4, 4));
+		board.makeMove(Move.createMove(board, 4, 1, 4, 3));
+		board.makeMove(Move.createMove(board, 3, 6, 3, 4));
+		
+		assertEquals(ChessGame.TT.generateHash(board), board.getHash());
+	}
 }

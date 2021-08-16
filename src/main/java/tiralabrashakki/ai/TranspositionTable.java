@@ -218,6 +218,10 @@ public class TranspositionTable {
 			}
 		}
 		
+		//pawn double jump
+		if (Character.toUpperCase(piece) == 'P' && Math.abs(dest.getY() - start.getY()) == 2) {
+			hash ^= getEnPassantKey(start.getX());
+		}
 		
 		//turn changes
 		hash ^= getTurnKey();
