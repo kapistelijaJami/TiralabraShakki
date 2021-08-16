@@ -1,6 +1,7 @@
 package tiralabrashakki;
 
 import java.awt.Point;
+import java.util.HashMap;
 import static tiralabrashakki.Constants.BOARD_SIZE;
 import static tiralabrashakki.PlayerColor.BLACK;
 import static tiralabrashakki.PlayerColor.WHITE;
@@ -37,22 +38,26 @@ public class Board {
 			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}};*/ //forced mate
 	
-	public static String FEN = "r1b1kb1r/p1p1qppp/2p2B2/3p4/4P3/2N5/PPP2PPP/R2QKB1R b KQkq - 0 1";
+	public static String FEN1 = "r1b1kb1r/p1p1qppp/2p2B2/3p4/4P3/2N5/PPP2PPP/R2QKB1R b KQkq - 0 1";
 	public static String FEN2 = "rnbqkbnr/pppp3p/6p1/4p1N1/2P5/4K1P1/PP1P2BP/RNBQ1q1R b kq - 0 1";
 	public static String FEN3 = "r3rbk1/1pp3p1/p3b2p/1q3p2/2PQN2B/1P6/P4PPP/R3R1K1 b - - 0 1";
 	public static String FEN4 = "8/8/8/7K/5k2/8/6r1/8 w - - 0 1";
 	public static String FEN_KING_QUEEN_MATE = "8/8/8/1q6/4K3/8/1k6/8 w - - 0 1";
 	
 	
-	private int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
+	private final int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
 	private Location kingW;
 	private Location kingB;
 	private Long currentHash = null;
 	private PlayerColor colorTurn = PlayerColor.WHITE;
 	private int nbrOfPliesPlayed = 0;
 	
+	private HashMap<Long, Integer> repetitions;
+	
+	
 	public Board() {
 		pieceHasMoved = new int[BOARD_SIZE][BOARD_SIZE];
+		repetitions = new HashMap<>();
 		findKings();
 		resetPieceHasMoved();
 		
@@ -62,6 +67,7 @@ public class Board {
 	public Board(String FEN) {
 		resetBoard();
 		pieceHasMoved = new int[BOARD_SIZE][BOARD_SIZE];
+		repetitions = new HashMap<>();
 		resetPieceHasMoved(); //resets all to 1, except pawn starting rows.
 		readFen(FEN);
 		
@@ -83,6 +89,8 @@ public class Board {
 				b.board[y][x] = this.board[y][x];
 			}
 		}
+		
+		b.repetitions = new HashMap<>(this.repetitions);
 		
 		b.kingW = this.kingW;
 		b.kingB = this.kingB;
@@ -172,6 +180,8 @@ public class Board {
 	}
 	
 	public void makeMove(Move move) {
+		ChessGame.TT.updateHash(this, move);
+		
 		Location start = move.getStart();
 		Location dest = move.getDest();
 		
@@ -198,9 +208,12 @@ public class Board {
 		
 		colorTurn = colorTurn.opposite();
 		nbrOfPliesPlayed++;
+		addRepetition();
 	}
 	
 	public void unmakeMove(Move move) {
+		removeRepetition();
+		
 		Location start = move.getStart();
 		Location dest = move.getDest();
 		
@@ -232,6 +245,8 @@ public class Board {
 		
 		colorTurn = colorTurn.opposite();
 		nbrOfPliesPlayed--;
+		
+		ChessGame.TT.updateHash(this, move);
 	}
 	
 	public void updateKingPosition(Location start, Location dest) {
@@ -250,26 +265,17 @@ public class Board {
 		return isInside(x) && isInside(y);
 	}
 	
-	/*TODO: keep track of hash and only update it
-	by little when making and unmaking moves.
-	Updates captures, moves, colorTurn etc. You can
-	toggle pieces/attributes with the same XOR key.*/
-	public void updateHashMake(Move move) {
-		long hash = getHash(); //needs to be up to date before making a move
-	}
-	
-	public void updateHashUnmake(Move move) {
-		long hash = getHash();
-	}
-	
 	public long getHash() {
 		if (currentHash == null) {
 			generateHash();
 			return currentHash;
 		}
 		
-		generateHash(); //TODO: remove this when board can keep track of the hash itself
 		return currentHash;
+	}
+	
+	public void setHash(long hash) {
+		this.currentHash = hash;
 	}
 	
 	private void generateHash() {
@@ -429,5 +435,38 @@ public class Board {
 		int y = 8 - (sqr.charAt(1) - '0');
 		
 		return new Point(x, y);
+	}
+	
+	private void addRepetition() {
+		long hash = getHash();
+		
+		Integer reps = repetitions.get(hash);
+		if (reps == null) {
+			repetitions.put(hash, 1);
+		} else {
+			repetitions.put(hash, reps + 1);
+		}
+	}
+	
+	private void removeRepetition() {
+		long hash = getHash();
+		
+		Integer reps = repetitions.get(hash);
+		if (reps != null) {
+			if (reps - 1 > 0) {
+				repetitions.put(hash, reps - 1);
+			} else {
+				repetitions.remove(hash);
+			}
+		}
+	}
+	
+	public boolean isDrawByRepetition() {
+		long hash = getHash();
+		Integer reps = repetitions.get(hash);
+		if (reps == null) {
+			return false;
+		}
+		return reps >= 3;
 	}
 }

@@ -94,6 +94,10 @@ public class Heuristics {
 	
 	public static int evaluate(Board board, int depth, boolean inCheck, int possibleMoves) { //possible moves can be -1 if not known
 		
+		if (board.isDrawByRepetition()) {
+			return 0;
+		}
+		
 		if (possibleMoves == 0) {
 			int multiplier = 1;
 			if (board.getTurnColor().isWhite()) {

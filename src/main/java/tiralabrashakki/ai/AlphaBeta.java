@@ -112,6 +112,10 @@ public class AlphaBeta implements FindBestMoveI {
 		if (timedOut())
 			return VALUE_TIMED_OUT;
 		
+		if (board.isDrawByRepetition()) {
+			return 0;
+		}
+		
 		//Probe the transposition table for a hash move
 		TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
 		Move hashMove = null;

@@ -421,6 +421,7 @@ public class Game extends Canvas implements Runnable {
 		if (isThinking > 0) {
 			return;
 		}
+		
 		System.out.println("PONDERING...");
 		isThinking = 2;
 		

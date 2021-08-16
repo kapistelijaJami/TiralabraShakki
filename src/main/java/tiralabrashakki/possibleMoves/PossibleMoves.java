@@ -11,6 +11,10 @@ public class PossibleMoves {
 	public static ArrayList<Move> getPossibleMoves(Board board, MoveCategory category) {
 		ArrayList<Move> possibleMoves = new ArrayList<>();
 		
+		if (board.isDrawByRepetition()) {
+			return possibleMoves;
+		}
+		
 		for (int y = 0; y < BOARD_SIZE; y++) {
 			for (int x = 0; x < BOARD_SIZE; x++) {
 				char c = board.get(x, y);
