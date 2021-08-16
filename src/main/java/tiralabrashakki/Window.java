@@ -1,5 +1,6 @@
 package tiralabrashakki;
 
+import tiralabrashakki.ui.Game;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.WindowAdapter;
@@ -31,7 +32,7 @@ public class Window {
 		
 		frame.setPreferredSize(new Dimension(width, height));	//set window size
 		frame.setMinimumSize(new Dimension(width, height));
-		frame.setMaximumSize(new Dimension(width, height));
+		//frame.setMaximumSize(new Dimension(width, height));
 		
 		//frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //window closes with X
 		frame.setResizable(true);								//cant be stretched

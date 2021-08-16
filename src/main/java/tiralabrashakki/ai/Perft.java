@@ -16,7 +16,7 @@ public class Perft implements FindBestMoveI {
 	private int mates = 0;
 	
 	@Override
-	public Move findBestMove(Board board, int maxDepth) {
+	public Move findBestMove(Board board, int maxDepth, boolean ponder) {
 		MoveAndValue mv = new MoveAndValue(null, 0);
 		for (int depth = 1; depth <= maxDepth; depth++) {
 			leafNodes = 0;
@@ -120,5 +120,20 @@ public class Perft implements FindBestMoveI {
 		System.out.print(print);
 		
 		System.out.println("\t nodes: " + leafNodes + "\tchecks: " + checks + "\tcaptures: " + captures + "\tmates: " + mates);
+	}
+
+	@Override
+	public int getCurrentEval() {
+		return 0;
+	}
+
+	@Override
+	public void setTimedOut(boolean b) {
+		
+	}
+
+	@Override
+	public ArrayList<Move> getPV() {
+		return new ArrayList<>();
 	}
 }

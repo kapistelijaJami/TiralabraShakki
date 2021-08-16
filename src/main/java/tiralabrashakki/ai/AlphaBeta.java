@@ -6,6 +6,7 @@ import tiralabrashakki.ChessGame;
 import tiralabrashakki.Constants;
 import static tiralabrashakki.Constants.PAWN_VAL;
 import static tiralabrashakki.Constants.QUEEN_VAL;
+import static tiralabrashakki.Constants.VALUE_TIMED_OUT;
 import tiralabrashakki.Move;
 import tiralabrashakki.possibleMoves.MoveCategory;
 import static tiralabrashakki.possibleMoves.MoveCategory.CAPTURES;
@@ -16,6 +17,9 @@ import tiralabrashakki.possibleMoves.SquareSafety;
 
 public class AlphaBeta implements FindBestMoveI {
 	public int maxSearchDepth = 0;
+	private int currentEvaluation = 0;
+	private boolean timedOut = false;
+	private ArrayList<Move> PV = new ArrayList<>();
 	
 	/**
 	 * Finds the best move to given depth using minimax with AlphaBeta pruning.
@@ -24,8 +28,8 @@ public class AlphaBeta implements FindBestMoveI {
 	 * @return The best move
 	 */
 	@Override
-	public Move findBestMove(Board board, int maxDepth) {
-		long timeOrig = System.currentTimeMillis();
+	public Move findBestMove(Board board, int maxDepth, boolean ponder) {
+		timedOut = false;
 		
 		int aspWindow = 25;
 
@@ -43,10 +47,12 @@ public class AlphaBeta implements FindBestMoveI {
 			ChessGame.nodes = 0;
 			maxSearchDepth = 0;
 			
-			val = negamax(board, depth, alpha, beta, SquareSafety.isKingSafe(board, board.getTurnColor()), 0);
+			int temp = negamax(board, depth, alpha, beta, SquareSafety.isKingSafe(board, board.getTurnColor()), 0);
 			
 			if (timedOut())
 				break;
+			
+			val = temp;
 			
 			if (ChessGame.ASPIRATION_WINDOW) {
 				if (val <= alpha) {
@@ -70,17 +76,20 @@ public class AlphaBeta implements FindBestMoveI {
 			}
 			time = System.currentTimeMillis();
 			
-			if (isWinningMove(val)) {
+			currentEvaluation = val * (board.getTurnColor().isWhite() ? 1 : -1);
+			
+			updatePV(board);
+			
+			if (Heuristics.isWinningMove(val) && !ponder) {
 				break;
 			}
-			
 			
 			depth++;
 		}
 		
-		System.out.println();
-		System.out.println("All together took: " + (System.currentTimeMillis() - timeOrig) + " ms val: " + val);
-		return ChessGame.TT.probe(board, 0, alpha, beta).getMove(board);
+		updatePV(board);
+		
+		return ChessGame.TT.probe(board, 0, alpha, beta).getMove(board); //TODO: throws nullpointer exception if TT entry was replaced (either save PV differently, or make sure it's not replaced)
 	}
 	
 	/**
@@ -98,6 +107,10 @@ public class AlphaBeta implements FindBestMoveI {
 	private int negamax(Board board, int depth, int alpha, int beta, boolean inCheck, int searchDepth) {
 		ChessGame.nodes++;
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
+		boolean pvNode = alpha + 1 != beta;
+		
+		if (timedOut())
+			return VALUE_TIMED_OUT;
 		
 		//Probe the transposition table for a hash move
 		TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
@@ -110,13 +123,12 @@ public class AlphaBeta implements FindBestMoveI {
 			}
 		}
 		
+		int pieceCount = Heuristics.getPieceCount(board);
 		int val;
 		
 		//null move pruning (If I do nothing and give enemy the turn, and I'm still over beta, I can prune)
-		//TODO: Should disable in endgames (because zugswangs are more common).
-		//Either with board.getNbrOfPliesPlayed() (plies is fast, but what counts as an end game?), or by material.
 		//Check that this is good, and doesnt mess up the result.
-		if (depth > 0) {
+		if (depth > 0 && pieceCount > 13) {
 			board.makeNullMove();
 			val = -negamax(board, depth - 1 - 2, -beta, -(beta - 1), false, searchDepth + 1);
 			board.unmakeNullMove();
@@ -131,7 +143,7 @@ public class AlphaBeta implements FindBestMoveI {
 			depth = Math.max(1, depth);
 		} else if (depth <= 0 || moves.isEmpty()) {
 			if (inCheck && moves.isEmpty()) { //Checkmate, evaluate instantly.
-				val = Heuristics.evaluate(board, depth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
+				val = Heuristics.evaluate(board, searchDepth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
 			} else {
 				val = quiescenceSearch(board, depth, alpha, beta, inCheck, searchDepth);
 			}
@@ -149,21 +161,32 @@ public class AlphaBeta implements FindBestMoveI {
 		MoveAndValue bestMove = new MoveAndValue(null, Integer.MIN_VALUE);
 		boolean foundPV = false;
 		
+		
 		//Go through all the moves
 		for (int i = 0; i < moves.size(); i++) {
 			Move move = moves.get(i);
 			board.makeMove(move);
 			
+			int reduce = 0;
+			//late move reduction
+			if (depth >= 3 && i >= 4 && !pvNode && !inCheck && !move.givesCheck() && !move.isCapture() && !move.isPromotion()) {
+				reduce = 1;
+			}
 			
 			if (foundPV) {
-				val = -negamax(board, depth - 1, -(alpha + 1), -alpha, move.givesCheck(), searchDepth + 1); //principal variation search with null window
+				val = -negamax(board, depth - 1 - reduce, -(alpha + 1), -alpha, move.givesCheck(), searchDepth + 1); //principal variation search with null window
 				if (val > alpha && val < beta) {
-					val = -negamax(board, depth - 1, -beta, -alpha, move.givesCheck(), searchDepth + 1); //assumption that previous pv is the best was wrong, have to re-search
+					reduce = Math.min(0, reduce);
+					val = -negamax(board, depth - 1 - reduce, -beta, -alpha, move.givesCheck(), searchDepth + 1); //assumption that previous pv is the best was wrong, have to re-search
 				}
 			} else {
-				val = -negamax(board, depth - 1, -beta, -alpha, move.givesCheck(), searchDepth + 1); //normal search
+				val = -negamax(board, depth - 1 - reduce, -beta, -alpha, move.givesCheck(), searchDepth + 1); //normal search
 			}
 			board.unmakeMove(move);
+			
+			if (timedOut()) {
+				return VALUE_TIMED_OUT;
+			}
 			
 			if (val > bestMove.getValue()) {
 				bestMove.setMove(move);
@@ -205,6 +228,9 @@ public class AlphaBeta implements FindBestMoveI {
 		ChessGame.nodes++;
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
 		
+		if (timedOut())
+			return VALUE_TIMED_OUT;
+		
 		//TT probe
 		TranspositionData data = ChessGame.TT.probe(board, depth, alpha, beta);
 		Move hashMove = null;
@@ -218,7 +244,7 @@ public class AlphaBeta implements FindBestMoveI {
 		
 		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, CAPTURES); //TODO: change to only generating good captures (maybe add "gives check" moves, but see that it doesnt cause infinite recursion)
 		
-		int standPat = Heuristics.evaluate(board, depth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
+		int standPat = Heuristics.evaluate(board, searchDepth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
 		
 		if (standPat >= beta) { //beta cutoff
 			return beta;
@@ -289,7 +315,7 @@ public class AlphaBeta implements FindBestMoveI {
 	}
 	
 	private boolean timedOut() {
-		return false;
+		return timedOut;
 	}
 	
 	private void printDepth(int depth, TranspositionData data, Board board, int value, long timeTook) {
@@ -300,8 +326,39 @@ public class AlphaBeta implements FindBestMoveI {
 		
 		System.out.println("\ttook: " + timeTook + " ms (max search depth: " + maxSearchDepth + ")\t nodes: " + ChessGame.nodes);
 	}
+	
+	@Override
+	public int getCurrentEval() {
+		return currentEvaluation;
+	}
 
-	private boolean isWinningMove(int val) {
-		return Constants.CHECKMATE_VAL - 50 <= val; 
+	@Override
+	public void setTimedOut(boolean b) {
+		timedOut = b;
+	}
+
+	private void updatePV(Board board) {
+		ArrayList<Move> pv = new ArrayList<>(); //new one instead of clear, because of multithreading
+		addPVMoves(board, pv, 0);
+		PV = pv;
+	}
+	
+	private void addPVMoves(Board board, ArrayList<Move> pv, int ply) {
+		TranspositionData data = ChessGame.TT.probe(board, 0, 0, 0);
+		if (data == null || data.getMove(board) == null || ply >= 15) {
+			return;
+		}
+		
+		Move move = data.getMove(board);
+		pv.add(move);
+		
+		board.makeMove(move);
+		addPVMoves(board, pv, ply + 1);
+		board.unmakeMove(move);
+	}
+	
+	@Override
+	public ArrayList<Move> getPV() {
+		return PV;
 	}
 }

@@ -8,6 +8,8 @@ public class Constants {
 												//Should probably give this from the perspective of root mover, so it's consistent throughout
 	
 	public static final int VALUE_UNKNOWN = 9999999;
+	public static final int VALUE_TIMED_OUT = 9999998;
+	
 	
 	//piece values:
 	public static final int PAWN_VAL = 100;

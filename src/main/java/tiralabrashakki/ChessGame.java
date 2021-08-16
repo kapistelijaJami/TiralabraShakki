@@ -1,5 +1,6 @@
 package tiralabrashakki;
 
+import tiralabrashakki.ui.Game;
 import java.util.ArrayList;
 import tiralabrashakki.ai.AlphaBeta;
 import tiralabrashakki.ai.HashFlag;

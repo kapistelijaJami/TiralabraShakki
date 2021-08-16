@@ -87,7 +87,7 @@ public class TranspositionTable {
 			PIECE_LETTER_MAP.put(pieceLetters[i], i);
 		}
 	}
-
+	
 	public TranspositionData probe(Board board, int depth, int alpha, int beta) {
 		long hash = board.getHash();
 		TranspositionData data = TABLE.get(hash);
@@ -95,7 +95,7 @@ public class TranspositionTable {
 			return null;
 		}
 		
-		Integer value = null;
+		int value = VALUE_UNKNOWN;
 		
 		if (data.depth >= depth) {
 			if (data.flag == HashFlag.HASH_EXACT) {
@@ -108,10 +108,6 @@ public class TranspositionTable {
 			if (data.flag == HashFlag.HASH_BETA && data.value >= beta) {
 				value = beta;
 			}
-		}
-		
-		if (value == null) {
-			value = VALUE_UNKNOWN;
 		}
 		
 		return new TranspositionData(data.startX, data.startY, data.destX, data.destY, value, data.depth);

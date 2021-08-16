@@ -3,7 +3,7 @@ package tiralabrashakki.ai;
 import tiralabrashakki.Board;
 import static tiralabrashakki.Constants.VALUE_UNKNOWN;
 import tiralabrashakki.Move;
-import static tiralabrashakki.ai.HashFlag.HASH_VALUE_UNKNOWN;
+import static tiralabrashakki.ai.HashFlag.HASH_FLAG_UNKNOWN;
 
 public class TranspositionData {
 	public long hash;
@@ -20,7 +20,7 @@ public class TranspositionData {
 		this.destY = destY;
 		this.value = value;
 		this.depth = depth;
-		this.flag = HASH_VALUE_UNKNOWN;
+		this.flag = HASH_FLAG_UNKNOWN;
 	}
 	
 	public TranspositionData(Move bestMove, int value, int depth, HashFlag flag) {

@@ -1,5 +1,6 @@
-package tiralabrashakki;
+package tiralabrashakki.ui;
 
+import tiralabrashakki.ui.Game;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
@@ -28,14 +29,25 @@ public class KeyInput extends KeyAdapter implements MouseListener, MouseMotionLi
 				game.makeBestMove();
 				break;
 			case KeyEvent.VK_SPACE:
-				game.printBestMove();
+				game.ponder();
 				break;
 			case KeyEvent.VK_LEFT:
 			case KeyEvent.VK_BACK_SPACE:
 				game.undoMove();
 				break;
-			case KeyEvent.VK_P:
+			case KeyEvent.VK_M:
 				PossibleMoves.printMoves(game.getBoard());
+				break;
+			case KeyEvent.VK_P:
+				game.makeMoveInstantly();
+				break;
+			case KeyEvent.VK_PLUS:
+			case KeyEvent.VK_ADD:
+				game.setDepth(game.getDepth() + 1);
+				break;
+			case KeyEvent.VK_MINUS:
+			case KeyEvent.VK_SUBTRACT:
+				game.setDepth(game.getDepth() - 1);
 				break;
 		}
 		

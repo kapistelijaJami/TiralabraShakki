@@ -1,8 +1,9 @@
-package tiralabrashakki;
+package tiralabrashakki.ui;
 
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -10,10 +11,17 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import tiralabrashakki.Board;
+import tiralabrashakki.ChessGame;
+import tiralabrashakki.Constants;
+import tiralabrashakki.ImageLoader;
+import tiralabrashakki.Location;
+import tiralabrashakki.Move;
+import tiralabrashakki.PlayerColor;
+import tiralabrashakki.Window;
 import static tiralabrashakki.Constants.BOARD_SIZE;
 import tiralabrashakki.ai.AlphaBeta;
-import tiralabrashakki.ai.FindBestMoveThread;
-import tiralabrashakki.ai.Perft;
+import tiralabrashakki.ai.FindBestMoveWorker;
 import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.ai.FindBestMoveI;
@@ -36,20 +44,27 @@ public class Game extends Canvas implements Runnable {
 	private Point highlightedSquare = null;
 	private ArrayList<Move> currentPossibleMoves;
 	
-	private boolean isThinking = false;
-	private int depth = 6;
-	private ArrayList<Move> allMoves;
+	private int isThinking = 0; //0 not thinking, 1 thinking and making a move, 2 pondering, but not making a move
+	private int depth = 9;
+	private final ArrayList<Move> allMoves;
 	private final BufferedImage chessPieces;
+	
+	private final CurrentEvaluation currentEval;
+	private FindBestMoveWorker currentMoveThread;
+	private boolean undoing = false;
 	
 	public Game() {
 		window = new Window(Constants.WIDTH, Constants.HEIGHT, "Chess Game", this);
 		alphabeta = new AlphaBeta();
-		//alphabeta = new Minimax();
 		board = new Board();
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		
 		allMoves = new ArrayList<>();
 		chessPieces = ImageLoader.loadImage("/images/chessPieces.png");
+		
+		setBoardSizes();
+		
+		currentEval = new CurrentEvaluation(40, fullBoardSize + 10);
 	}
 	
 	public synchronized void start() {
@@ -73,13 +88,11 @@ public class Game extends Canvas implements Runnable {
 		this.addKeyListener(input);
 		this.addMouseMotionListener(input);
 		this.addComponentListener(input);
-		
-		setBoardSizes();
 	}
 	
 	private void setBoardSizes() {
 		int margin = 20;
-		fullBoardSize = Math.min(WIDTH - margin * 2, HEIGHT - margin * 2);
+		fullBoardSize = Math.min(WIDTH - margin * 2, HEIGHT - margin * 3);
 		squareSize = fullBoardSize / BOARD_SIZE;
 		fullBoardSize = squareSize * BOARD_SIZE;
 	}
@@ -103,64 +116,9 @@ public class Game extends Canvas implements Runnable {
 		System.exit(0);
 	}
 	
-	public void printBestMove() {
-		if (isThinking) {
-			return;
-		}
-		isThinking = true;
-		new FindBestMoveThread(board, depth, alphabeta, this::printMove).start();
-	}
-	
-	public void makeBestMove() {
-		if (isThinking) {
-			return;
-		}
-		isThinking = true;
-		new FindBestMoveThread(board, depth, alphabeta, this::makeMove).start();
-	}
-	
-	public void playFullGame() {
-		if (isThinking) {
-			return;
-		}
-		isThinking = true;
-		new FindBestMoveThread(board, depth, alphabeta, this::keepMakingMoves).start();
-	}
-	
-	private void printMove(Move move) {
-		System.out.println("Move was: " + move);
-		isThinking = false;
-	}
-	
-	public void makeMove(Move move) {
-		printMove(move);
-		board.makeMove(move);
-		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
-		isThinking = false;
-		allMoves.add(move);
-	}
-	
-	public void undoMove() {
-		board.unmakeMove(allMoves.remove(allMoves.size() - 1));
-		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
-	}
-	
-	private void keepMakingMoves(Move move) {
-		makeMove(move);
-		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			
-		}
-		
-		if (!PossibleMoves.getPossibleMoves(board, LEGAL).isEmpty()) {
-			playFullGame();
-		}
-	}
-	
 	public void update() {
-		
+		currentEval.setEval(alphabeta.getCurrentEval());
+		currentEval.update();
 	}
 	
 	public void render() {
@@ -170,6 +128,11 @@ public class Game extends Canvas implements Runnable {
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		renderBoard(g);
+		
+		Point p = getBoardOffset();
+		currentEval.render(g, p.x + fullBoardSize + 10, p.y - 5);
+		
+		renderPV(g);
 		
 		g.dispose();
 		this.getBufferStrategy().show();
@@ -195,7 +158,7 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	public Point getBoardOffset() {
-		int xOffset = WIDTH / 2 - fullBoardSize / 2;
+		int xOffset = WIDTH / 2 - (fullBoardSize + currentEval.getWidth()) / 2;
 		int yOffset = HEIGHT / 2 - fullBoardSize / 2;
 		return new Point(xOffset, yOffset);
 	}
@@ -251,7 +214,7 @@ public class Game extends Canvas implements Runnable {
 				
 				BufferedImage pieceImg = ImageLoader.getSprite(chessPieces, n, h, chessPieces.getWidth() / 6, chessPieces.getHeight() / 2);
 				
-				g.drawImage(pieceImg, x * squareSize + offset.x, y * squareSize + offset.y, squareSize, squareSize, null);
+				g.drawImage(pieceImg, x * squareSize + offset.x, y * squareSize + offset.y, null);
 				
 				
 				if (drawDot) {
@@ -263,6 +226,23 @@ public class Game extends Canvas implements Runnable {
 			counter--;
 		}
 		
+	}
+	
+	private void renderPV(Graphics2D g) {
+		ArrayList<Move> PV = alphabeta.getPV();
+		String str = "";
+		
+		for (int i = 0; i < PV.size(); i++) {
+			if (i != 0) {
+				str += " -> ";
+			}
+			str += PV.get(i);
+		}
+		
+		Point offset = getBoardOffset();
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Serif", Font.BOLD, 15));
+		g.drawString(str, offset.x, offset.y + fullBoardSize + 22);
 	}
 	
 	private boolean squareIsPossible(int x, int y) {
@@ -299,9 +279,11 @@ public class Game extends Canvas implements Runnable {
 			
 		} else if (highlightedSquare != null && isInsideBoard(x, y)) {
 			
-			Move move = createMoveFromHighlight(getSquare(x, y));
-			if (PossibleMoves.isPossibleMove(board, move)) {
+			if (squareIsPossible(p.x, p.y)) {
+				Move move = createMoveFromHighlight(p);
+				cancelPonder();
 				makeMove(move);
+				ponder();
 				highlightedSquare = null;
 			} else if (board.get(p.x, p.y) != ' ' && !highlightedSquare.equals(p)) {
 				highlightedSquare = p;
@@ -323,6 +305,10 @@ public class Game extends Canvas implements Runnable {
 	public void setDepth(int depth) {
 		System.out.println("Depth set to: " + depth);
 		this.depth = depth;
+	}
+	
+	public int getDepth() {
+		return depth;
 	}
 
 	public void hover(MouseEvent e) {
@@ -347,5 +333,118 @@ public class Game extends Canvas implements Runnable {
 	public void windowResized(int w, int h) {
 		WIDTH = w;
 		HEIGHT = h;
+	}
+	
+	public void makeMoveInstantly() {
+		if (isThinking == 1 && currentMoveThread != null) {
+			currentMoveThread.makeMoveInstantly();
+		}
+	}
+
+	public void stopThinking() {
+		if (currentMoveThread != null) {
+			System.out.println("STOPPED");
+			currentMoveThread.cancel();
+		}
+	}
+	
+	public void printMove(String text, Move move) {
+		System.out.println(text + move);
+		System.out.println();
+	}
+	
+	public void ponderResult(Move move) {
+		printMove("Best move is: ", move);
+		
+		if (isThinking == 2) {
+			isThinking = 0;
+		}
+	}
+	
+	public void bestMoveResult(Move move) {
+		printMove("Best move was: ",move);
+		makeMove(move);
+		
+		if (isThinking == 1) {
+			isThinking = 0;
+		}
+		
+		ponder();
+	}
+	
+	private void makeMove(Move move) {
+		if (undoing) return;
+		
+		board.makeMove(move);
+		System.out.println("MOVED: " + move);
+		System.out.println();
+		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
+		allMoves.add(move);
+	}
+	
+	public void undoMove() {
+		if (allMoves.isEmpty()) {
+			return;
+		}
+		undoing = true;
+		stopThinking();
+		isThinking = 0;
+		
+		board.unmakeMove(allMoves.remove(allMoves.size() - 1));
+		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
+		
+		
+		undoing = false;
+		ponder();
+	}
+	
+	public void makeBestMove() {
+		if (isThinking == 1) {
+			return;
+		}
+		if (isThinking == 2) {
+			cancelPonder();
+		}
+		isThinking = 1;
+		
+		while (currentMoveThread != null && currentMoveThread.running) {
+			currentMoveThread.cancel();
+			sleep(50);
+		}
+		
+		currentMoveThread = new FindBestMoveWorker(board, depth, alphabeta, false, this::bestMoveResult);
+		currentMoveThread.start();
+	}
+	
+	public void ponder() {
+		if (isThinking > 0) {
+			return;
+		}
+		System.out.println("PONDERING...");
+		isThinking = 2;
+		
+		while (currentMoveThread != null && currentMoveThread.running) {
+			currentMoveThread.cancel();
+			sleep(50);
+		}
+		
+		currentMoveThread = new FindBestMoveWorker(board, depth + 1, alphabeta, true, this::ponderResult);
+		currentMoveThread.start();
+	}
+	
+	public void cancelPonder() {
+		if (isThinking != 2) {
+			return;
+		}
+		stopThinking();
+		isThinking = 0;
+	}
+
+	private void sleep(int i) {
+		try {
+			Thread.sleep(i);
+		} catch (InterruptedException e) {
+			System.out.println(e);
+		}
 	}
 }

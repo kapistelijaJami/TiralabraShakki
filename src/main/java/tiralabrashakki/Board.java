@@ -37,6 +37,11 @@ public class Board {
 			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}};*/ //forced mate
 	
+	public static String FEN = "r1b1kb1r/p1p1qppp/2p2B2/3p4/4P3/2N5/PPP2PPP/R2QKB1R b KQkq - 0 1";
+	public static String FEN2 = "rnbqkbnr/pppp3p/6p1/4p1N1/2P5/4K1P1/PP1P2BP/RNBQ1q1R b kq - 0 1";
+	public static String FEN3 = "r3rbk1/1pp3p1/p3b2p/1q3p2/2PQN2B/1P6/P4PPP/R3R1K1 b - - 0 1";
+	public static String FEN4 = "8/8/8/7K/5k2/8/6r1/8 w - - 0 1";
+	
 	
 	private int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
 	private Location kingW;

@@ -143,10 +143,8 @@ public class Move implements Comparable<Move> {
 		}
 		String p = (Character.toUpperCase(piece) == 'P' && takes == ' ' ? "" : "" + piece);
 		String move = p + (takes != ' ' ? 'x' : "") + (char)(dest.getX() + 'a') + "" + (8 - dest.getY());
-		String coordinates = " (" + (char)(start.getX() + 'a') + "" + (8 - start.getY()) + " -> " + (char)(dest.getX() + 'a') + "" + (8 - dest.getY()) + ifTakes + ")";
 		
-		//return (char)(start.getX() + 'a') + "" + (8 - start.getY()) + " -> " + (char)(dest.getX() + 'a') + "" + (8 - dest.getY()) + ifTakes;
-		return move + coordinates;
+		return move;
 	}
 
 	public boolean isCapture() {

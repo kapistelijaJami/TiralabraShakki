@@ -1,6 +1,7 @@
 package tiralabrashakki.ai;
 
 import tiralabrashakki.Board;
+import tiralabrashakki.Constants;
 import static tiralabrashakki.Constants.BISHOP_PAIR;
 import static tiralabrashakki.Constants.BISHOP_VAL;
 import static tiralabrashakki.Constants.BOARD_SIZE;
@@ -99,7 +100,7 @@ public class Heuristics {
 				multiplier = -1;
 			}
 			
-			int val = inCheck ? CHECKMATE_VAL + depth : STALEMATE_VAL;
+			int val = inCheck ? CHECKMATE_VAL - depth : STALEMATE_VAL;
 			
 			return (val) * multiplier;
 		}
@@ -224,6 +225,20 @@ public class Heuristics {
 		return points;
 	}
 	
+	public static int getPieceCount(Board board) {
+		int count = 0;
+		
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
+				char c = board.get(x, y);
+				if (c != ' ') {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	
 	/**
 	 * Returns the difference of the material value of the pieces.
 	 * Positive means first is more valuable, negative means second is more valuable.
@@ -253,5 +268,17 @@ public class Heuristics {
 			default:
 				return 0;
 		}
+	}
+	
+	public static boolean isWinningMove(int val) {
+		return Constants.CHECKMATE_VAL - 100 <= val; 
+	}
+	
+	public static boolean isLosingMove(int val) {
+		return -Constants.CHECKMATE_VAL + 100 >= val; 
+	}
+	
+	public static int staticExcangeEval(Board board) {
+		return 0;
 	}
 }
