@@ -24,7 +24,7 @@ public class ChessGame {
 	public static long nodes = 0;
 	
 	public static void main(String[] args) {
-		if (args[0].toLowerCase().equals("performance")) {
+		if (args.length != 0 && args[0].toLowerCase().equals("performance")) {
 			performanceTest();
 		} else {
 			Game game = new Game();
