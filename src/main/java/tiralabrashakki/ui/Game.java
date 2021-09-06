@@ -45,7 +45,7 @@ public class Game extends Canvas implements Runnable {
 	private ArrayList<Move> currentPossibleMoves;
 	
 	private int isThinking = 0; //0 not thinking, 1 thinking and making a move, 2 pondering, but not making a move
-	private int depth = 9;
+	private int depth = 8;
 	private final ArrayList<Move> allMoves;
 	private final BufferedImage chessPieces;
 	
@@ -376,6 +376,7 @@ public class Game extends Canvas implements Runnable {
 		
 		board.makeMove(move);
 		printMove("MOVED: ", move);
+		System.out.println("Repetitions: " + board.getRepetitions());
 		currentPossibleMoves = PossibleMoves.getPossibleMoves(board, LEGAL);
 		allMoves.add(move);
 	}

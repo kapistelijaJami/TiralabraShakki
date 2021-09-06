@@ -132,7 +132,7 @@ public class AlphaBeta implements FindBestMoveI {
 		
 		//null move pruning (If I do nothing and give enemy the turn, and I'm still over beta, I can prune)
 		//Check that this is good, and doesnt mess up the result.
-		if (depth > 0 && pieceCount > 13) {
+		if (depth > 0 && pieceCount > 13 && ChessGame.NULL_MOVE_PRUNING) {
 			board.makeNullMove();
 			val = -negamax(board, depth - 1 - 2, -beta, -(beta - 1), false, searchDepth + 1);
 			board.unmakeNullMove();
@@ -173,11 +173,11 @@ public class AlphaBeta implements FindBestMoveI {
 			
 			int reduce = 0;
 			//late move reduction
-			if (depth >= 3 && i >= 4 && !pvNode && !inCheck && !move.givesCheck() && !move.isCapture() && !move.isPromotion()) {
+			if (depth >= 3 && i >= 4 && !pvNode && !inCheck && !move.givesCheck() && !move.isCapture() && !move.isPromotion() && ChessGame.LATE_MOVE_REDUCTION) {
 				reduce = 1;
 			}
 			
-			if (foundPV) {
+			if (foundPV && ChessGame.PRINCIPAL_VARIATION) {
 				val = -negamax(board, depth - 1 - reduce, -(alpha + 1), -alpha, move.givesCheck(), searchDepth + 1); //principal variation search with null window
 				if (val > alpha && val < beta) {
 					reduce = Math.min(0, reduce);
@@ -229,6 +229,12 @@ public class AlphaBeta implements FindBestMoveI {
 		/*if (inCheck) { //not sure if this should be in or not
 			return negamax(board, 1, alpha, beta, inCheck, searchDepth); //TODO: this caused a loop, needs to add to detect a mate (what about stalemates?)
 		}*/
+		
+		if (!ChessGame.QUIESCENCE_SEARCH) {
+			ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL);
+			return Heuristics.evaluate(board, searchDepth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
+		}
+		
 		ChessGame.nodes++;
 		maxSearchDepth = Math.max(maxSearchDepth, searchDepth);
 		
@@ -246,9 +252,9 @@ public class AlphaBeta implements FindBestMoveI {
 			}
 		}
 		
-		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, CAPTURES); //TODO: change to only generating good captures (maybe add "gives check" moves, but see that it doesnt cause infinite recursion)
+		ArrayList<Move> moves = PossibleMoves.getPossibleMoves(board, LEGAL); //TODO: change to only generating good captures (maybe add "gives check" moves, but see that it doesnt cause infinite recursion)
 		
-		int standPat = Heuristics.evaluate(board, searchDepth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1);
+		int standPat = Heuristics.evaluate(board, searchDepth, inCheck, moves.size()) * (board.getTurnColor().isWhite() ? 1 : -1); //TODO: cant use moves size here, because its only captures
 		
 		if (standPat >= beta) { //beta cutoff
 			return beta;
@@ -309,6 +315,9 @@ public class AlphaBeta implements FindBestMoveI {
 	 * @param hashMove 
 	 */
 	private void sortHashMove(ArrayList<Move> moves, Move hashMove) {
+		if (!ChessGame.SORT_HASH_MOVE) {
+			return;
+		}
 		for (int i = 0; i < moves.size(); i++) {
 			Move move = moves.get(i);
 			if (move.equals(hashMove)) {

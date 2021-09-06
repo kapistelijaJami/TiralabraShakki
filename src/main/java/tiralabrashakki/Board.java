@@ -2,6 +2,7 @@ package tiralabrashakki;
 
 import java.awt.Point;
 import java.util.HashMap;
+import org.junit.jupiter.api.Assertions;
 import static tiralabrashakki.Constants.BOARD_SIZE;
 import static tiralabrashakki.PlayerColor.BLACK;
 import static tiralabrashakki.PlayerColor.WHITE;
@@ -48,7 +49,7 @@ public class Board {
 	private final int[][] pieceHasMoved; //0 no, 1 yes, 2 en passant marker (pawn can eat and land to this square)
 	private Location kingW;
 	private Location kingB;
-	private Long currentHash = null;
+	private long currentHash;
 	private PlayerColor colorTurn = PlayerColor.WHITE;
 	private int nbrOfPliesPlayed = 0;
 	
@@ -180,8 +181,6 @@ public class Board {
 	}
 	
 	public void makeMove(Move move) {
-		ChessGame.TT.updateHash(this, move);
-		
 		Location start = move.getStart();
 		Location dest = move.getDest();
 		
@@ -208,6 +207,9 @@ public class Board {
 		
 		colorTurn = colorTurn.opposite();
 		nbrOfPliesPlayed++;
+		
+		//currentHash = ChessGame.TT.getUpdatedHash(getHash(), move); //TODO: add these back when they work
+		currentHash = ChessGame.TT.generateHash(this);
 		addRepetition();
 	}
 	
@@ -246,7 +248,8 @@ public class Board {
 		colorTurn = colorTurn.opposite();
 		nbrOfPliesPlayed--;
 		
-		ChessGame.TT.updateHash(this, move);
+		//currentHash = ChessGame.TT.getUpdatedHash(getHash(), move); //TODO: add these back when they work
+		currentHash = ChessGame.TT.generateHash(this);
 	}
 	
 	public void updateKingPosition(Location start, Location dest) {
@@ -266,16 +269,7 @@ public class Board {
 	}
 	
 	public long getHash() {
-		if (currentHash == null) {
-			generateHash();
-			return currentHash;
-		}
-		
 		return currentHash;
-	}
-	
-	public void setHash(long hash) {
-		this.currentHash = hash;
 	}
 	
 	private void generateHash() {
@@ -365,11 +359,13 @@ public class Board {
 	}
 	
 	public void makeNullMove() {
+		currentHash = ChessGame.TT.getUpdatedHash(getHash(), null);
 		colorTurn = colorTurn.opposite();
 		nbrOfPliesPlayed++;
 	}
 	
 	public void unmakeNullMove() {
+		currentHash = ChessGame.TT.getUpdatedHash(getHash(), null);
 		colorTurn = colorTurn.opposite();
 		nbrOfPliesPlayed--;
 	}
@@ -468,5 +464,14 @@ public class Board {
 			return false;
 		}
 		return reps >= 3;
+	}
+	
+	public int getRepetitions() {
+		long hash = getHash();
+		Integer reps = repetitions.get(hash);
+		if (reps == null) {
+			return 0;
+		}
+		return reps;
 	}
 }

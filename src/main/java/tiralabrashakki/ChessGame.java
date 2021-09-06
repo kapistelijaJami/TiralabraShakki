@@ -14,27 +14,22 @@ import tiralabrashakki.possibleMoves.SquareSafety;
 
 public class ChessGame {
 	public static final TranspositionTable TT = new TranspositionTable();
-	public static final boolean ASPIRATION_WINDOW = true;
+	public static boolean ASPIRATION_WINDOW = true;
+	public static boolean NULL_MOVE_PRUNING = true;
+	public static boolean SORT_HASH_MOVE = true;
+	public static boolean LATE_MOVE_REDUCTION = true;
+	public static boolean PRINCIPAL_VARIATION = true;
+	public static boolean QUIESCENCE_SEARCH = true;
 	
 	public static long nodes = 0;
 	
 	public static void main(String[] args) {
-		Game game = new Game();
-		game.start();
-		
-		
-		//move generation tests
-		/*Perft perft = new Perft();
-		Board board = new Board();
-		
-		int depth = 6;
-		long time = System.currentTimeMillis();
-		for (int i = 1; i <= depth; i++) {
-			perft.dividePerft(board, i);
-			System.out.println("");
+		if (args[0].toLowerCase().equals("performance")) {
+			performanceTest();
+		} else {
+			Game game = new Game();
+			game.start();
 		}
-		System.out.println("total: " + perft.doPerft(board, depth));
-		System.out.println(System.currentTimeMillis() - time);*/
 	}
 	
 	public static void printBoard(Board board) {
@@ -73,5 +68,63 @@ public class ChessGame {
 		}
 		
 		System.out.println("\n\n");
+	}
+	
+	public static void performanceTest() {
+		Board board = new Board();
+		
+		int depth = 6;
+		AlphaBeta ab = new AlphaBeta();
+		NULL_MOVE_PRUNING = false;
+		SORT_HASH_MOVE = false;
+		LATE_MOVE_REDUCTION = false;
+		//PRINCIPAL_VARIATION = false;
+		QUIESCENCE_SEARCH = false;
+		ASPIRATION_WINDOW = false;
+		
+		System.out.println("Performance tests, quiescence search off.");
+		System.out.println("Only alpha-beta, depth " + depth + ":");
+		
+		long time = System.nanoTime();
+		ab.findBestMove(board, depth, false);
+		System.out.println("Time taken total: " + ((System.nanoTime() - time) / 1e6) + " ms");
+		
+		
+		System.out.println();
+		System.out.println("Alpha-beta with aspiration window, depth " + depth + ":");
+		ASPIRATION_WINDOW = true;
+		
+		time = System.nanoTime();
+		ab.findBestMove(board, depth, false);
+		System.out.println("Time taken total: " + ((System.nanoTime() - time) / 1e6) + " ms");
+		
+		
+		System.out.println();
+		System.out.println("Alpha-beta, aspiration window, sort hash move, depth " + depth + ":");
+		SORT_HASH_MOVE = true;
+		
+		time = System.nanoTime();
+		ab.findBestMove(board, depth, false);
+		System.out.println("Time taken total: " + ((System.nanoTime() - time) / 1e6) + " ms");
+		
+		
+		System.out.println();
+		System.out.println("Alpha-beta, aspiration window, sort hash move, null move pruning, depth " + depth + ":");
+		NULL_MOVE_PRUNING = true;
+		
+		time = System.nanoTime();
+		ab.findBestMove(board, depth, false);
+		System.out.println("Time taken total: " + ((System.nanoTime() - time) / 1e6) + " ms");
+		
+		
+		System.out.println();
+		System.out.println("Alpha-beta, aspiration window, sort hash move, null move pruning, late move reduction, depth " + depth + ":");
+		LATE_MOVE_REDUCTION = true;
+		
+		time = System.nanoTime();
+		ab.findBestMove(board, depth, false);
+		System.out.println("Time taken total: " + ((System.nanoTime() - time) / 1e6) + " ms");
+		
+		System.out.println();
 	}
 }

@@ -3,8 +3,8 @@ package tiralabrashakki.ai;
 import java.util.HashMap;
 import java.util.Random;
 import tiralabrashakki.Board;
-import tiralabrashakki.ChessGame;
 import static tiralabrashakki.Constants.BOARD_SIZE;
+import static tiralabrashakki.Constants.FULL_BOARD_SIZE;
 import static tiralabrashakki.Constants.VALUE_UNKNOWN;
 import tiralabrashakki.Location;
 import tiralabrashakki.Move;
@@ -153,13 +153,15 @@ public class TranspositionTable {
 	
 	/**
 	 * Toggles the bits representing the changing attributes of the move.
-	 * The board state has to be what it was right before making the move,
-	 * so in unmake, you have to first unmake the move, and then toggle the hash.
-	 * @param board
+	 * @param hash
 	 * @param move 
+	 * @return 
 	 */
-	public void updateHash(Board board, Move move) {
-		long hash = board.getHash();
+	public long getUpdatedHash(long hash, Move move) { //TODO: doesnt work correctly yet
+		if (move == null) { //for null move pruning
+			hash ^= getTurnKey();
+			return hash;
+		}
 		
 		Location start = move.getStart();
 		Location dest = move.getDest();
@@ -185,11 +187,11 @@ public class TranspositionTable {
 			
 			char rook = 'r';
 			int extra = 1;
-			if (board.getTurnColor().isWhite()) {
+			if (PlayerColor.pieceIsWhite(piece)) {
 				rook = 'R';
 				extra = 0;
 			}
-
+			
 			if (kingside) {
 				hash ^= getPieceKey(rook, start.getX() + 3, start.getY());
 				hash ^= getPieceKey(rook, start.getX() + 1, start.getY());
@@ -202,7 +204,7 @@ public class TranspositionTable {
 			
 		} else if (move.isFirstMoveForPiece()) { //castling rights
 			int extra = 1;
-			if (board.getTurnColor().isWhite()) {
+			if (PlayerColor.pieceIsWhite(piece)) {
 				extra = 0;
 			}
 			
@@ -226,6 +228,6 @@ public class TranspositionTable {
 		//turn changes
 		hash ^= getTurnKey();
 		
-		board.setHash(hash);
+		return hash;
 	}
 }

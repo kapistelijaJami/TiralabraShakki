@@ -41,6 +41,7 @@ public class Perft implements FindBestMoveI {
 	
 	public int doPerft(Board board, int depth) {
 		if (depth == 0) {
+			System.out.println(Heuristics.evaluate(board, depth, false));
 			return 1;
 		}
 		int nodes = 0;
