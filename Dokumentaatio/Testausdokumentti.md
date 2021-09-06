@@ -1,4 +1,4 @@
-# Määrittelydokumentti
+# Testausdokumentti
 
 ## Yksikkötestauksen kattavuusraportti
 Yksikkötestauksen kattavuus näkyy [Pit raportissa](https://kapistelijajami.github.io/TiralabraShakki/Dokumentaatio/Pit%20raportti/)
