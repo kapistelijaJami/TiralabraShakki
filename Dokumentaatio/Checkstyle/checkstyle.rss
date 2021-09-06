@@ -25,8 +25,8 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2021</copyright>
     <item>
-      <title>File: 18,
-             Errors: 923,
+      <title>File: 29,
+             Errors: 2119,
              Warnings: 0,
              Infos: 0
       </title>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="${project.url}/checkstyle.html#tiralabrashakki.possibleMoves.PossibleMovesBishop.java">tiralabrashakki/possibleMoves/PossibleMovesBishop.java</a>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.Window.java">tiralabrashakki/Window.java</a>
                 </td>
                 <td>
                   0
@@ -55,12 +55,12 @@ under the License.
                   0
                 </td>
                 <td>
-                  21
+                  31
                 </td>
               </tr>
                           <tr>
                 <td>
-                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ai.TranspositionData.java">tiralabrashakki/ai/TranspositionData.java</a>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ai.HashFlag.java">tiralabrashakki/ai/HashFlag.java</a>
                 </td>
                 <td>
                   0
@@ -69,21 +69,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  9
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="${project.url}/checkstyle.html#tiralabrashakki.PlayerColor.java">tiralabrashakki/PlayerColor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  18
+                  5
                 </td>
               </tr>
                           <tr>
@@ -97,7 +83,35 @@ under the License.
                   0
                 </td>
                 <td>
-                  228
+                  262
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ui.Game.java">tiralabrashakki/ui/Game.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  259
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ImageLoader.java">tiralabrashakki/ImageLoader.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  29
                 </td>
               </tr>
                           <tr>
@@ -116,6 +130,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ai.Perft.java">tiralabrashakki/ai/Perft.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  60
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="${project.url}/checkstyle.html#tiralabrashakki.ChessGame.java">tiralabrashakki/ChessGame.java</a>
                 </td>
                 <td>
@@ -125,35 +153,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  35
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="${project.url}/checkstyle.html#tiralabrashakki.possibleMoves.SquareSafety.java">tiralabrashakki/possibleMoves/SquareSafety.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  85
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="${project.url}/checkstyle.html#tiralabrashakki.possibleMoves.PossibleMovesKnight.java">tiralabrashakki/possibleMoves/PossibleMovesKnight.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  22
+                  84
                 </td>
               </tr>
                           <tr>
@@ -167,7 +167,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  23
+                  34
                 </td>
               </tr>
                           <tr>
@@ -181,7 +181,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  32
+                  53
                 </td>
               </tr>
                           <tr>
@@ -195,7 +195,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  37
+                  43
                 </td>
               </tr>
                           <tr>
@@ -209,21 +209,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  15
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="${project.url}/checkstyle.html#tiralabrashakki.Board.java">tiralabrashakki/Board.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  143
+                  50
                 </td>
               </tr>
                           <tr>
@@ -237,21 +223,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  48
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="${project.url}/checkstyle.html#tiralabrashakki.Constants.java">tiralabrashakki/Constants.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  17
+                  184
                 </td>
               </tr>
                           <tr>
@@ -265,7 +237,161 @@ under the License.
                   0
                 </td>
                 <td>
-                  49
+                  130
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.possibleMoves.MoveCategory.java">tiralabrashakki/possibleMoves/MoveCategory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  16
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ui.KeyInput.java">tiralabrashakki/ui/KeyInput.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  44
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ai.TT.java">tiralabrashakki/ai/TT.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  18
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.possibleMoves.PossibleMovesBishop.java">tiralabrashakki/possibleMoves/PossibleMovesBishop.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  24
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ai.TranspositionData.java">tiralabrashakki/ai/TranspositionData.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  50
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.PlayerColor.java">tiralabrashakki/PlayerColor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  22
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.possibleMoves.SquareSafety.java">tiralabrashakki/possibleMoves/SquareSafety.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  83
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.possibleMoves.PossibleMovesKnight.java">tiralabrashakki/possibleMoves/PossibleMovesKnight.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  26
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.Board.java">tiralabrashakki/Board.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  272
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ai.FindBestMoveI.java">tiralabrashakki/ai/FindBestMoveI.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  9
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.Constants.java">tiralabrashakki/Constants.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  35
                 </td>
               </tr>
                           <tr>
@@ -279,7 +405,35 @@ under the License.
                   0
                 </td>
                 <td>
-                  47
+                  71
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ai.FindBestMoveWorker.java">tiralabrashakki/ai/FindBestMoveWorker.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  37
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#tiralabrashakki.ui.CurrentEvaluation.java">tiralabrashakki/ui/CurrentEvaluation.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  60
                 </td>
               </tr>
                           <tr>
@@ -293,7 +447,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  73
+                  107
                 </td>
               </tr>
                       </tbody>

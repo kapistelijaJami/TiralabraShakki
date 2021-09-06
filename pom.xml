@@ -94,6 +94,13 @@
 				<artifactId>pitest-maven</artifactId>
 				<version>1.6.8</version>
 				
+				<configuration>
+					<excludedClasses>
+						<param>tiralabrashakki.ui.*</param>
+						<param>tiralabrashakki.ai.*</param>
+					</excludedClasses>	
+				</configuration>
+				
 				<!-- Pit tests will be run with maven's test phase -->
 				<!--<executions>
 					<execution>

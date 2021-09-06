@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import tiralabrashakki.Board;
 import tiralabrashakki.ChessGame;
 import tiralabrashakki.Move;
-import tiralabrashakki.ai.TranspositionTable;
 
 public class TranspositionTableTest {
 	

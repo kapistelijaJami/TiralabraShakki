@@ -1,9 +1,7 @@
 package tests;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import tiralabrashakki.Location;
@@ -11,16 +9,6 @@ import tiralabrashakki.Location;
 public class LocationTest {
 	Location loc;
 	
-	public LocationTest() {
-	}
-	
-	@BeforeAll
-	public static void setUpClass() {
-	}
-	
-	@AfterAll
-	public static void tearDownClass() {
-	}
 	
 	@BeforeEach
 	public void setUp() {

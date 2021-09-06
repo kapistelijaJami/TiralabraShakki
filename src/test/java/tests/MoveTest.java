@@ -2,7 +2,6 @@ package tests;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,27 +11,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tiralabrashakki.Board;
-import tiralabrashakki.Location;
 import tiralabrashakki.Move;
 
 public class MoveTest {
 	private Board board;
-	
-	@BeforeAll
-	public static void setUpClass() {
-	}
-	
-	@AfterAll
-	public static void tearDownClass() {
-	}
-	
 	@BeforeEach
 	public void setUp() {
 		board = new Board();
-	}
-	
-	@AfterEach
-	public void tearDown() {
 	}
 	
 	@Test
