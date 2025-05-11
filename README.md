@@ -1,14 +1,16 @@
 # TiralabraShakki
 
-**Käyttöhjeet**
+## Käyttöohjeet
 
 Ohjelmassa on käyttöliittymä, jolla pystyy pelaamaan joko yksikseen, tai enteriä painamalla algoritmi tekee siirron sille, jonka vuoro on siirtää. Spacea painamalla konsoliin tulee tulostus algoritmin sanovasta parhaasta siirrosta, mutta sitä ei kuitenkaan automaattisesti suoriteta laudalla. Syvyyttä voi muuttaa + ja - näppäimillä (oletus on nyt 9), ja takaisin pääsee siirroissa nuolella vasemmalle. Algoritmin voi pakottaa tekemään siirron heti painamalla P, jolloin se suorittaa sen hetkisen parhaan siirron. Laudan alapuolella näkyy tämänhetkinen paras siirtoketju, ja oikealla sen hetkinen laudan evaluaatiomittari.
 
 Suorityskykytestauksen voi suorittaa antamalla ohjelmalle argumentiksi "performance":
 java -jar ohjelma.jar performance
 
+## Preview
+![TiralabraShakki](Preview.png "TiralabraShakki")
 
-**Linkit**
+## Linkit
 * [Määrittelydokumentti](Dokumentaatio/Määrittelydokumentti.md)
 * [Toteutusdokumentti](Dokumentaatio/Toteutusdokumentti.md)
 * [Testausdokumentti](Dokumentaatio/Testausdokumentti.md)

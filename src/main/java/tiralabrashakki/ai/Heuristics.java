@@ -275,11 +275,11 @@ public class Heuristics {
 	}
 	
 	public static boolean isWinningMove(int val) {
-		return Constants.CHECKMATE_VAL - 100 <= val; 
+		return Constants.CHECKMATE_VAL - 100 <= val;
 	}
 	
 	public static boolean isLosingMove(int val) {
-		return -Constants.CHECKMATE_VAL + 100 >= val; 
+		return -Constants.CHECKMATE_VAL + 100 >= val;
 	}
 	
 	public static int staticExcangeEval(Board board) {

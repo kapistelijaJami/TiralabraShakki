@@ -88,7 +88,7 @@
 				<version>3.0.0-M5</version>
 			</plugin>
 			
-			<!-- Pit mutation tests. Run with mvn org.pitest:pitest-maven:mutationCoverage (or mvn test if uncommented) -->
+			<!-- Pit mutation tests. Run with mvn org.pitest:pitest-maven:mutationCoverage (or mvn test if test execution is uncommented) -->
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>

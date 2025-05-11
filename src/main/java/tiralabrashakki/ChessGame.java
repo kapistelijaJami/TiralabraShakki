@@ -12,6 +12,7 @@ import static tiralabrashakki.possibleMoves.MoveCategory.LEGAL;
 import tiralabrashakki.possibleMoves.PossibleMoves;
 import tiralabrashakki.possibleMoves.SquareSafety;
 
+//TODO: Some problems with move generation: https://i.imgur.com/gGK5FZ3.png and https://i.imgur.com/cYUZARO.png
 public class ChessGame {
 	public static final TranspositionTable TT = new TranspositionTable();
 	public static boolean ASPIRATION_WINDOW = true;

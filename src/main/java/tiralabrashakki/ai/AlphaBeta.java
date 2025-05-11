@@ -25,6 +25,7 @@ public class AlphaBeta implements FindBestMoveI {
 	 * Finds the best move to given depth using minimax with AlphaBeta pruning.
 	 * @param board State of the board
 	 * @param maxDepth Search depth
+	 * @param ponder
 	 * @return The best move
 	 */
 	@Override
@@ -32,7 +33,7 @@ public class AlphaBeta implements FindBestMoveI {
 		timedOut = false;
 		
 		int aspWindow = 25;
-
+		
 		int aspirationLowFails = 0;
 		int aspirationHighFails = 0;
 		int alpha = Integer.MIN_VALUE + 1; //dont do min value when negamax, because when * -1 it doesnt change sign
@@ -42,7 +43,7 @@ public class AlphaBeta implements FindBestMoveI {
 		
 		long time = System.currentTimeMillis();
 		
-		int val = 0;
+		int val;
 		for (int depth = 1; depth <= maxDepth; ) {
 			ChessGame.nodes = 0;
 			maxSearchDepth = 0;
