@@ -8,7 +8,7 @@ Suorityskykytestauksen voi suorittaa antamalla ohjelmalle argumentiksi "performa
 java -jar ohjelma.jar performance
 
 ## Preview
-![TiralabraShakki](Preview.png "TiralabraShakki")
+![TiralabraShakki](https://github.com/kapistelijaJami/TiralabraShakki/blob/568d35c561e54933eb70755be853836fd456f90b/images/Preview.png "TiralabraShakki")
 
 ## Linkit
 * [Määrittelydokumentti](Dokumentaatio/Määrittelydokumentti.md)
