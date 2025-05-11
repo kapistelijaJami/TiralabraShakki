@@ -27,7 +27,7 @@ Time taken total: 13801.8708 ms
 Tilavaativuus algoritmilla on O(h \* s), koska jokaista syvyyttä kohden sen hetkisellä aktiivisella haaralla tarvitsee pitää muistissa niiden lapset. Mutta itsellä on käytössä myös transposition taulu, joka pitää kirjaa käydyistä solmuista, ja niiden arvoista, ja parhaasta siirroista. Tämä ei ole loputtomasti kasvava taulu, solmuja korvataan kun tulee kollisio, mutta se vie tietysti paljon enemmän tilaa kuin pääalgoritmi itsenään, joten en sitä tähän laske, kun on vain algoritmia nopeuttava ominaisuus, eikä siksi vaadittava.
 
 
-Lisää suorityskykyvertailusta [Testausdokumentissa](Dokumentaatio/Testausdokumentti.md).
+Lisää suorityskykyvertailusta [Testausdokumentissa](Testausdokumentti.md).
 
 
 ## Lähteet:
